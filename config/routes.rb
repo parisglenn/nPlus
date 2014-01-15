@@ -1,4 +1,6 @@
 NPlus::Application.routes.draw do
+  resources :events
+
   resources :subscriptions
 
   resources :users
