@@ -11,9 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140115232510) do
+ActiveRecord::Schema.define(version: 20140115233124) do
 
   create_table "geos", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "interests", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -25,6 +31,18 @@ ActiveRecord::Schema.define(version: 20140115232510) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "subscriptions", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "geo_id"
+    t.integer  "interest_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "subscriptions", ["geo_id"], name: "index_subscriptions_on_geo_id"
+  add_index "subscriptions", ["interest_id"], name: "index_subscriptions_on_interest_id"
+  add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id"
 
   create_table "teams", force: true do |t|
     t.string   "name"
