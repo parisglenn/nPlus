@@ -1,11 +1,14 @@
 NPlus::Application.routes.draw do
-  get "home/index"
+  get "log_in" => "sessions#new", :as => "log_in"
+  get "sign_up" => "users#new", :as => "sign_up"
+  get "log_out" => "sessions#destroy", :as => "log_out"
+
   root :to => "home#index"
   resources :events
 
 
   resources :users
-
+  resources :sessions
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

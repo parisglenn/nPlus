@@ -40,12 +40,20 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
-    @user = User.new(params[:user])
+    @office = Office.find(params[:user][:office])
+    @team = Team.find(params[:user][:team])
+    @user = User.new
+
+    @user.assign_attributes(:full_name => params[:user][:full_name], 
+                              :email => params[:user][:email],
+                              :password => params[:user][:password],
+                              :office => @office,
+                              :team => @team)
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render json: @user, status: :created, location: @user }
+        format.html { redirect_to root_path, notice: 'User was successfully created.' }
+        format.json 
       else
         format.html { render action: "new" }
         format.json { render json: @user.errors, status: :unprocessable_entity }
