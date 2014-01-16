@@ -1,4 +1,0 @@
-nPlus
-=====
-
-MediaMath Social Service
