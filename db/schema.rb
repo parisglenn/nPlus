@@ -11,7 +11,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140115233124) do
+ActiveRecord::Schema.define(version: 20140115235329) do
+
+  create_table "event_tags", force: true do |t|
+    t.integer  "event_id"
+    t.integer  "interest_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "event_tags", ["event_id"], name: "index_event_tags_on_event_id"
+  add_index "event_tags", ["interest_id"], name: "index_event_tags_on_interest_id"
+
+  create_table "events", force: true do |t|
+    t.string   "name"
+    t.string   "start_time"
+    t.string   "end_time"
+    t.string   "location"
+    t.string   "event_date"
+    t.integer  "geo_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "events", ["geo_id"], name: "index_events_on_geo_id"
 
   create_table "geos", force: true do |t|
     t.string   "name"
