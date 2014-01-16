@@ -21,15 +21,15 @@
   </div>
   <div class="field">
     <%= f.label :password %><br />
-    <%= f.text_field :password %>
+    <%= f.password_field :password %>
   </div>
   <div class="field">
     <%= f.label :office %><br />
-    <%= f.text_field :office %>
+    <%= f.select :office, options_for_select(generate_office_dropdown) %>
   </div>
   <div class="field">
     <%= f.label :team %><br />
-    <%= f.text_field :team %>
+    <%= f.select :team, options_for_select(generate_team_dropdown) %>
   </div>
   <div class="actions">
     <%= f.submit %>
