@@ -1,6 +1,6 @@
 class EventTag < ActiveRecord::Base
 	attr_accessible :event_id :interest_id
-	accepts_nested_attributes_for :event_attributes, :interest_attributes
+	accepts_nested_attributes_for :event, :interest
   belongs_to :event
   belongs_to :interest
 end
