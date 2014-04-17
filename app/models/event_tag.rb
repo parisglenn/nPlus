@@ -1,5 +1,5 @@
 class EventTag < ActiveRecord::Base
   belongs_to :event
-  has_one :interest
-  # attr_accessible :title, :body
+  belongs_to :interest
+  attr_accessible :event_id, :interest_id
 end

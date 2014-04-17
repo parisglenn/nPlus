@@ -3,3 +3,6 @@
 <% if current_user %>
 	<%= link_to "Create an event", new_event_path %>
 <% end %>
+<% if current_user %>
+	<%= link_to "Manage Subscriptions", subscriptions_path %> 
+<% end %>

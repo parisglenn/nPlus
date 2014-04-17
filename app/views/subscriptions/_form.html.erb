@@ -1,0 +1,41 @@
+<%= form_for(@subscription) do |f| %>
+  <% if @subscription.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@subscription.errors.count, "error") %> prohibited this subscription from being saved:</h2>
+
+      <ul>
+      <% @subscription.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+      t.references :user
+      t.references :geo
+      t.references :interest
+
+  <div class="field">
+    <%= f.hidden_field :user, :value => current_user.id %>
+  </div>
+  <% @geo.each do |geo| %>
+  <div class="field">
+    <%= f.label geo.name %><br />
+    <%= radio_button_tag(<%= geo.name %>, "true") %>
+    <%= label_tag(<%= geo.name %>, "Subscribe") %>
+    <%= radio_button_tag(<%= geo.name %>, "false") %>
+    <%= label_tag(<%= geo.name %>, "Unsubscribe") %>
+  </div>
+  <% end %>
+
+<!-- do the same thing for interests -->
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

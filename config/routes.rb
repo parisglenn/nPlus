@@ -6,6 +6,7 @@ NPlus::Application.routes.draw do
   root :to => "home#index"
   resources :events
 
+  #devise_for :users
 
   resources :users
 

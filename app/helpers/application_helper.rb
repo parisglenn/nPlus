@@ -48,4 +48,15 @@ module ApplicationHelper
 							]
 		return @times
 	end
+
+	#format time
+	def ft hm
+		minute = hm[-2..-1]
+		hour = hm[0...-2]
+		hemiday = "am"
+		if hour.to_i > 12
+			hemiday = "pm"
+		end
+		hour+':'+minute+' '+hemiday
+	end
 end

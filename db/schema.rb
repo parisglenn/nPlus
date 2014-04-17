@@ -11,7 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140116011550) do
+ActiveRecord::Schema.define(:version => 20140327210850) do
+
+  create_table "event_tag_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "event_tags", :force => true do |t|
     t.integer  "event_id"
@@ -30,8 +36,9 @@ ActiveRecord::Schema.define(:version => 20140116011550) do
     t.string   "location"
     t.string   "event_date"
     t.integer  "geo_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.text     "description"
   end
 
   add_index "events", ["geo_id"], :name => "index_events_on_geo_id"
@@ -63,6 +70,7 @@ ActiveRecord::Schema.define(:version => 20140116011550) do
     t.integer  "interest_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.boolean  "subscribed"
   end
 
   add_index "subscriptions", ["geo_id"], :name => "index_subscriptions_on_geo_id"
