@@ -109,7 +109,7 @@ class EventsController < ApplicationController
       EventTag.create!({
         event_id: @event.id,
         interest_id: interest.id
-        })
+      })
     end
 
     #look at current tags

@@ -10,10 +10,17 @@ NPlus::Application.routes.draw do
 
   resources :users
 
-  resources :subscriptions
-
-
+  resources :subscriptions do
+        collection do
+            put 'update_subscriptions'
+        end
+  end
+  get "my_interests" => "subscriptions#account_subscriptions", :as => "account_subscriptions"
+  #match "/my_subscriptions", to: "subscriptions#account_subscriptions", via: get#, as: "account_subscriptions"
+  #match '/users', to: 'profiles#index', via: 'get', as: 'users'
   resources :sessions
+
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

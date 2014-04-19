@@ -35,10 +35,11 @@
 
 <p>
   <b>Categories</b>
-
+  <%tags = "" %>
   <% @event_tags.each do |et| %>
-    <%=et.interest.name + ", " %>
+    <%tags += et.interest.name + ", " %>
   <% end %>
+  <%= tags[0...-2] %>
 </p>
 
 <%= link_to 'Edit', edit_event_path(@event) %> |
