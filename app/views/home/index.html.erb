@@ -1,7 +1,13 @@
 <h1>nPlus</h1>
 <% if current_user %>
 	<%= link_to "Create an event", new_event_path %>
-<% end %>
-<% if current_user %>
 	<%= link_to "Your interests", account_subscriptions_path %> 
+
+	<h3> Your upcoming events </h3>
+	<%= render "events/user_events" %>
+	<h3> Suggested events for you </h3>
+	<%= render "events/suggested_events" %>
+	<%#= render "events/_upcoming_events" %>
+
+
 <% end %>

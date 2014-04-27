@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140327210850) do
+ActiveRecord::Schema.define(:version => 20140426162144) do
 
   create_table "event_tag_types", :force => true do |t|
     t.string   "name"
@@ -49,10 +49,10 @@ ActiveRecord::Schema.define(:version => 20140309230020) do
     t.string   "start_time"
     t.string   "end_time"
     t.string   "location"
-    t.string   "event_date"
+    t.date     "event_date",  :limit => 255
     t.integer  "geo_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
     t.text     "description"
   end
 
@@ -78,6 +78,18 @@ ActiveRecord::Schema.define(:version => 20140309230020) do
   end
 
   add_index "offices", ["geo_id"], :name => "index_offices_on_geo_id"
+
+  create_table "rsvps", :force => true do |t|
+    t.boolean  "host"
+    t.string   "status"
+    t.integer  "user_id"
+    t.integer  "event_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "rsvps", ["event_id"], :name => "index_rsvps_on_event_id"
+  add_index "rsvps", ["user_id"], :name => "index_rsvps_on_user_id"
 
   create_table "subscriptions", :force => true do |t|
     t.integer  "user_id"

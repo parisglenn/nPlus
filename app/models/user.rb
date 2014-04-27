@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me
   belongs_to :office
   belongs_to :team
+  has_many :rsvps
+  has_many :subscriptions
   accepts_nested_attributes_for :office, :team
   attr_accessible :email, :full_name, :password, :office, :team,
                   :login, 

@@ -52,6 +52,11 @@ class EventsController < ApplicationController
     params[:event][:geo] = @geo
     event_types = params[:event_type]
     @event = Event.new(params[:event])
+    @event.event_date = params[:event][:event_date]
+    puts "event date from params"
+    puts params[:event][:event_date]
+    puts "event.event_date"
+    puts @event.event_date
 
     respond_to do |format|
       if @event.save

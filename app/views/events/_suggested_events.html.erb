@@ -1,0 +1,27 @@
+<table id="spend-alert-table" class="table table-bordered table-striped tablesorter">
+  <thead>
+    <tr>
+  		<th>Event</th>
+      <th>Date</th>
+  		<th>Time</th>
+  		<th>Location</th>
+      <th>Description</th>
+      <th>Type</th>
+      <th>Join</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @suggested_events.each do |se| %>
+      <tr>
+        <td><%= se.name %></td>
+        <td><%= se.event_date %></td>
+        <td><%= se.start_time %></td>
+        <td><%= se.location %></td>
+        <td><%= se.description %></td>
+        <% ets = "| "; se.event_tags.each { |et| et.interest.name+" | "} %>
+        <td><%= ets %></td>
+        <td><%#=  %>join</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
