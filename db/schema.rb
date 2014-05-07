@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140426162144) do
+ActiveRecord::Schema.define(:version => 20140507130631) do
 
   create_table "event_tag_types", :force => true do |t|
     t.string   "name"
@@ -106,6 +106,14 @@ ActiveRecord::Schema.define(:version => 20140309230020) do
 
   create_table "teams", :force => true do |t|
     t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "user_geos", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "geo_id"
+    t.boolean  "subscribed"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

@@ -1,4 +1,12 @@
 module ApplicationHelper
+	def get_rsvp_buttons
+		{:declined => "Can't Go", :attending => "I'm going", :maybe => "Maybe"}
+	end
+
+	def get_status_messages
+		{attending: "You're going!", declined: "You're not going", maybe: "Maybe", undecided: "Not sure yet"}
+	end
+
 	def generate_office_dropdown
 		@offices = Office.all
 		@offices_dropdown_list = Array.new

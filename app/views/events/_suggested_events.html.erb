@@ -13,14 +13,22 @@
   <tbody>
     <% @suggested_events.each do |se| %>
       <tr>
-        <td><%= se.name %></td>
-        <td><%= se.event_date %></td>
-        <td><%= se.start_time %></td>
-        <td><%= se.location %></td>
-        <td><%= se.description %></td>
-        <% ets = "| "; se.event_tags.each { |et| et.interest.name+" | "} %>
-        <td><%= ets %></td>
-        <td><%#=  %>join</td>
+        <td style="padding: 10px;"><%= link_to se.name, event_path(se) %></td>
+        <td style="padding: 10px;"><%= se.event_date %></td>
+        <td style="padding: 10px;"><%= ft se.start_time %></td>
+        <td style="padding: 10px;"><%= se.location %></td>
+        <td style="padding: 10px;"><%= se.description %></td>
+        <% ets = "| "; se.event_tags.each { |et| ets += et.interest.name + " | "} %>
+        <td style="padding: 10px;"><%= ets %></td>
+        <td style="padding: 10px;">
+          <form action="rsvps/create" method="post">
+            <input type="hidden" name="user_id" id="user_id_#{se.id}" value=<%=current_user.id%>>
+            <input type="hidden" name="event_id" id="event_id_#{se.id}" value=<%=se.id%>>
+            <input type="hidden" name="status" id="status_#{se.id}" value="attending">
+            <input name="commit" type="submit" value="I'm going!">
+          </form>
+          <%#= link_to "I'm going!", create_rsvp_path+"?user_id=#{current_user.id}&event_id#{se.id}"  %>
+        </td>
       </tr>
     <% end %>
   </tbody>

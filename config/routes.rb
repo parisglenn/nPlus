@@ -20,12 +20,23 @@ NPlus::Application.routes.draw do
   get "my_interests" => "subscriptions#account_subscriptions", :as => "account_subscriptions"
   #match "/my_subscriptions", to: "subscriptions#account_subscriptions", via: get#, as: "account_subscriptions"
   #match '/users', to: 'profiles#index', via: 'get', as: 'users'
-  resources :sessions
 
   devise_scope :user do 
     root to: 'static_pages#home'
     match '/sessions/user', to: 'devise/sessions#create', via: :post
   end
+
+  resources :user_geos do
+        collection do
+            put 'update_account_geos'
+        end
+  end
+  get "my_geos" => "user_geos#account_geos", :as => "account_geos"
+
+  resources :sessions
+
+  post "rsvps/create" => "rsvps#create", as: "create_rsvp"
+  resources :rsvps
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

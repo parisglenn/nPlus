@@ -7,20 +7,27 @@
   		<th>Location</th>
       <th>Description</th>
       <th>Type</th>
-      <th>Remove</th>
+      <th>Can't go?</th>
     </tr>
   </thead>
   <tbody>
     <% @user_events.each do |ue| %>
       <tr>
-        <td><%= ue.name %></td>
+        <td><%= link_to ue.name, event_path(ue) %></td>
         <td><%= ue.event_date %></td>
-        <td><%= ue.start_time %></td>
+        <td><%= ft ue.start_time %></td>
         <td><%= ue.location %></td>
         <td><%= ue.description %></td>
-        <% ets = "| "; se.event_tags.each { |et| et+" | "} %>
+        <% ets = "| "; ue.event_tags.each { |et| ets += et.interest.name + " | "} %>
         <td><%= ets %></td>
-        <td><%=  %></td>
+        <td>
+          <form action="rsvps/create" method="post">
+            <input type="hidden" name="user_id" id="user_id_#{ue.id}" value=<%=current_user.id%>>
+            <input type="hidden" name="event_id" id="event_id_#{ue.id}" value=<%=ue.id%>>
+            <input type="hidden" name="status" id="status_#{ue.id}" value="declined">
+            <input name="commit" type="submit" value="Remove">
+          </form>
+        </td>
       </tr>
     <% end %>
   </tbody>

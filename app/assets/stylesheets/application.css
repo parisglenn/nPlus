@@ -12,3 +12,6 @@
  *= require bootstrap-datepicker
  *= require_tree .
  */
+.rsvp-button = {
+	display: inline;
+}

@@ -15,6 +15,7 @@ class EventsController < ApplicationController
   def show
     @event = Event.find(params[:id])
     @event_tags = EventTag.where event_id: @event.id
+    @attending_users = @event.attending_users
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @event }
@@ -52,11 +53,8 @@ class EventsController < ApplicationController
     params[:event][:geo] = @geo
     event_types = params[:event_type]
     @event = Event.new(params[:event])
-    @event.event_date = params[:event][:event_date]
-    puts "event date from params"
-    puts params[:event][:event_date]
-    puts "event.event_date"
-    puts @event.event_date
+    date = format_date
+    @event.event_date = date
 
     respond_to do |format|
       if @event.save
@@ -121,7 +119,7 @@ class EventsController < ApplicationController
     #look at tags in the params
     #if a tag is in the current, but not in the params, it should get deleted
     #if a tag is in the params but not in current, it should get added
-
+    @event.event_date = format_date
     respond_to do |format|
       if @event.update_attributes(params[:event])
         format.html { redirect_to @event, notice: 'Event was successfully updated.' }
@@ -144,4 +142,14 @@ class EventsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  private
+
+    def format_date
+      date_array = params[:event][:event_date].split("/")
+      month = date_array[0]
+      day   = date_array[1] 
+      year  = date_array[2]
+      "#{year}-#{month}-#{day}"
+    end
 end
