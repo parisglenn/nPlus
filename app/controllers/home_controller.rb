@@ -3,8 +3,8 @@ class HomeController < ApplicationController
   def index
   	if current_user
   		#to do - add geo parameters to these as well
-  		@user_events = Rsvp.find_current_user_attending_events current_user.id
-  		@suggested_events = Event.find_current_user_suggested_events current_user.id
+  		@user_events = current_user.find_attending_events
+  		@suggested_events = current_user.find_suggested_events
   		@new_rsvp = Rsvp.new
 	else
 		redirect_to log_in_path#new_user_session_path

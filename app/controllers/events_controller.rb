@@ -16,6 +16,11 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
     @event_tags = EventTag.where event_id: @event.id
     @attending_users = @event.attending_users
+    #move the host logic to the event model
+    hosts = Rsvp.where(event_id: @event.id).where(host: true)
+    host_user_ids = hosts.map { |h| h.user_id }
+    host_users = User.where user_id: host_user_ids
+    @host_ids = hosts.map { |hi| hi.id }
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @event }
@@ -57,16 +62,15 @@ class EventsController < ApplicationController
     @event.event_date = date
 
     respond_to do |format|
-      if @event.save
+      if @event.save && Rsvp.create!({
+          user_id: current_user.id,
+          event_id: @event.id,
+          host: true,
+          status: 'attending'
+        })  
         event_types.keys.each do |et|
-          puts "event type"
-          puts @event.id
-          puts et
           interest = Interest.where(name: et).last
-          puts interest.inspect
           new_et = EventTag.create!(event_id: @event.id, interest_id: interest.id)
-          puts "new et id"
-          puts new_et.id
         end
         format.html { redirect_to @event, notice: 'Event was successfully created.' }
         format.json { render json: @event, status: :created, location: @event }
@@ -135,11 +139,20 @@ class EventsController < ApplicationController
   # DELETE /events/1.json
   def destroy
     @event = Event.find(params[:id])
-    @event.destroy
+    @rsvp = Rsvp.where(user_id: current_user.id).where(event_id: @event.id).last
 
     respond_to do |format|
-      format.html { redirect_to events_url }
-      format.json { head :no_content }
+      if !@rsvp.nil? && @rsvp.host == true
+        @event.destroy
+        format.html { redirect_to events_url }
+        format.json { head :no_content }
+      else
+        flash[:error] = "To delete an event you must be a host"
+        @event_tags = EventTag.where event_id: @event.id
+        @attending_users = @event.attending_users        
+        format.html { render action: "show" }
+        format.json { render json: @event.errors, status: :unprocessable_entity }
+      end
     end
   end
 

@@ -16,10 +16,6 @@
   </div>
 <% end %>
 
-      t.references :user
-      t.references :geo
-      t.references :interest
-
   <div class="field">
     <%= f.hidden_field :user, :value => current_user.id %>
   </div>

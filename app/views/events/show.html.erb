@@ -43,8 +43,14 @@
 </p>
 
 <p>
-  <b>Attendees:</b>
-  <!-- Show a list of attendees -->
+  <b>Attendees:</br></b>
+  <% @attending_users.each do |attendee| %>
+    <%= attendee.full_name %>
+    <% if @host_ids.include? attendee.id %>
+      (host)
+    <% end %> 
+    </br>
+  <% end %>
 </p>
 
 

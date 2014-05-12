@@ -1,16 +1,16 @@
-<%= form_tag update_subscriptions_subscriptions_path, :method => :put do %> 
+<%= form_tag update_account_geos_user_geos_path, :method => :put do %> 
 
   <div class="field">
-    <% @interests.each do |type| %>
-      <% if @existing_subscription_ids.include? type.id %>
-        <%= check_box_tag('interests['+type.name+']', 1, true) %> <!--type.name?-->
+    <% @geos.each do |type| %>
+      <% if @existing_user_geo_ids.include? type.id %>
+        <%= check_box_tag('geos['+type.name+']', 1, true) %> <!--type.name?-->
       <% else %>
-        <%= check_box_tag('interests['+type.name+']') %>
+        <%= check_box_tag('geos['+type.name+']') %>
       <% end %>
-      <%= label_tag('interests['+type.name+']', type.name) %>
+      <%= label_tag('geos['+type.name+']', type.name) %>
     <% end %>
   </div>
-  <p>By checking the box above, you will receive notifications regarding events which also have that keyword. </p>
+  <p>By checking the box above, you will receive notifications regarding events which also have that geographic setting. </p>
 <%= submit_tag "Update", class: 'actions btn btn-info' %>
 
 <% end %>
