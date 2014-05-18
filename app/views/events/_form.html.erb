@@ -43,17 +43,18 @@
     <%= f.label :geo %><br />
     <%= f.select :geo, options_for_select(generate_geo_dropdown) %>
   </div>
+  Event Type
   <div class="field">
     <% @event_types.each do |type| %>
       <% if @event_tag_ids.include? type.id %>
-        <%= check_box_tag('event_type['+type.name+']', 1, true) %> <!--type.name?-->
+        <%= check_box_tag('event_type['+type.name+']', 1, true, class: 'inline') %> <!--type.name?-->
       <% else %>
-        <%= check_box_tag('event_type['+type.name+']') %>
+        <%= check_box_tag('event_type['+type.name+']', 0, false, class: 'inline') %>
       <% end %>
-      <%= label_tag('event_type['+type.name+']', type.name) %>
+      <%= label_tag('event_type['+type.name+']', type.name, class: 'inline') %>
     <% end %>
   </div>
-  <div class="actions">
+  <div class="actions btn">
     <%= f.submit %>
   </div>
 <% end %>
