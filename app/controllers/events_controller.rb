@@ -18,9 +18,7 @@ class EventsController < ApplicationController
     @attending_users = @event.attending_users
     #move the host logic to the event model
     hosts = Rsvp.where(event_id: @event.id).where(host: true)
-    host_user_ids = hosts.map { |h| h.user_id }
-    host_users = User.where user_id: host_user_ids
-    @host_ids = hosts.map { |hi| hi.id }
+    @host_ids = hosts.map { |h| h.user_id }
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @event }
@@ -43,12 +41,14 @@ class EventsController < ApplicationController
   # GET /events/1/edit
   def edit
     @event = Event.find(params[:id])
-    @event_types = Interest.all
-    @event_tags = EventTag.where event_id: @event.id
-    @event_tag_ids = @event_tags.map {|et| et.interest_id}
-    puts "event tag ids"
-    puts @event_tag_ids
-
+    @rsvp = Rsvp.where(event_id: @event.id).where(user_id: current_user.id).last
+    if !@rsvp.nil? && @rsvp.host == true
+      @event_types = Interest.all
+      @event_tags = EventTag.where event_id: @event.id
+      @event_tag_ids = @event_tags.map {|et| et.interest_id}
+    else
+      redirect_to @event
+    end
   end
 
   # POST /events

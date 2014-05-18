@@ -48,12 +48,19 @@
     <%= attendee.full_name %>
     <% if @host_ids.include? attendee.id %>
       (host)
+    <% elsif @host_ids.include? current_user.id %>
+      <%= form_tag assign_host_path, :method => :put do %> 
+        <input type="hidden" name="new_host" id="user_id_#{event.id}" value=<%=attendee.id%>>
+        <input type="hidden" name="event_id" id="event_id_#{event.id}" value=<%=@event.id%>>
+        <input class="rsvp-button" name="commit" type="submit" value="Make a host">
+      <% end %>
     <% end %> 
     </br>
   <% end %>
 </p>
 
 
-
-<%= link_to 'Edit', edit_event_path(@event) %> |
+<% if @host_ids.include? current_user.id %>
+  <%= link_to 'Edit', edit_event_path(@event) %> |
+<% end %>
 <%= link_to 'Back', events_path %>

@@ -21,4 +21,36 @@ class RsvpsController < ApplicationController
 			redirect_to root_path
 		end  
 	end
+	def assign_host
+		@rsvp = Rsvp.where(event_id: params[:event_id]).where(user_id: params[:new_host]).last
+		@rsvp.host=true
+		@rsvp.save
+		@event = Event.find params[:event_id]
+
+	    respond_to do |format|
+	      if @rsvp.save
+	        format.html { redirect_to @event, notice: 'The event has a new host.' }
+	        format.json { head :no_content }
+	      else
+	        format.html { redirect_to @event, error: 'User could not be added as host.' }
+	        format.json { render json: @event.errors, status: :unprocessable_entity }
+	      end
+	    end
+	end
+	def update
+		@rsvp = Rsvp.where(event_id: params[:event_id]).where(user_id: params[:new_host]).last
+		@rsvp.host=true
+		@rsvp.save
+		@event = Event.find params[:event_id]
+
+	    respond_to do |format|
+	      if @rsvp.save
+	        format.html { redirect_to @event, notice: 'The event has a new host.' }
+	        format.json { head :no_content }
+	      else
+	        format.html { redirect_to @event, error: 'User could not be added as host.' }
+	        format.json { render json: @event.errors, status: :unprocessable_entity }
+	      end
+	    end
+	end
 end

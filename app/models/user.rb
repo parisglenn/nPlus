@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   belongs_to :team
   has_many :rsvps
   has_many :subscriptions
+  has_many :user_geos
   accepts_nested_attributes_for :office, :team
   attr_accessible :email, :full_name, :password, :office, :team,
                   :login, 
@@ -36,6 +37,38 @@ class User < ActiveRecord::Base
 	    nil
 	  end
 	end
+
+  def find_suggested_events
+    geo_tags = UserGeo.where(user_id: self.id)
+    geo_tag_ids = geo_tags.map { |g| g.geo_id }
+    geos = Geo.where id: geo_tag_ids
+    geo_ids = geos.map { |g| g.id }
+    subscriptions = Subscription.where(user_id: self.id)
+    interests = []
+    subscriptions.each { |s| interests << s.interest_id }
+    event_tags = EventTag.where interest_id: interests
+    event_ids = []
+    event_tags.each { |et| event_ids << et.event_id }
+    event_ids.uniq!
+    rsvps = Rsvp.where(user_id: self.id).where(event_id: event_ids).where(status: ['attending','declined'])
+    rsvps.each { |r| event_ids.delete r.event_id }
+    @suggested_events = Event.where(id: event_ids).where("event_date > ?", Time::now).where(geo_id: geo_ids)
+    @suggested_events.each do |event|
+      event.status = :undecided
+    end
+    @suggested_events
+  end
+
+  def find_attending_events
+    rsvps = Rsvp.where(user_id: self.id).where(status: "attending")
+    event_ids = []
+    rsvps.each { |r| event_ids << r.event_id }
+    @user_events = Event.where(id: event_ids).where('event_date > ?', Time::now)
+    @user_events.each do |event|
+      event.status = :attending
+    end
+    @user_events
+  end
 
 end
 

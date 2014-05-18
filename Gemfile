@@ -27,6 +27,24 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
+group :assets do
+  gem 'uglifier', '>= 1.0.3'
+  gem 'bootstrap-sass', '~> 2.2.2.0'
+  gem "flat-ui-rails", "0.0.2"
+  gem 'turbolinks', '1.1.1'
+  gem "jquery-turbolinks", "~> 2.0.1"
+  gem 'bootstrap-datepicker-rails'
+  gem 'jquery-datatables-rails', git: 'git://github.com/rweng/jquery-datatables-rails.git'
+end
+
+gem 'jquery-rails'
+gem 'bootstrap-datepicker-rails'
+gem 'chosen-rails'
+
+gem "therubyracer"
+gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
+gem "twitter-bootstrap-rails"
+
 # To use ActiveModel has_secure_password
  ######Why is this not loading? did version of ruby change or something?
  ################gem 'bcrypt-ruby', '~> 3.0.0'

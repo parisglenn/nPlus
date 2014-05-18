@@ -11,11 +11,13 @@ NPlus::Application.routes.draw do
   #devise_for :users
 
   resources :users
+  resources :interests
+  resources :geos
 
   resources :subscriptions do
-        collection do
-            put 'update_subscriptions'
-        end
+    collection do
+        put 'update_subscriptions'
+    end
   end
   get "my_interests" => "subscriptions#account_subscriptions", :as => "account_subscriptions"
   #match "/my_subscriptions", to: "subscriptions#account_subscriptions", via: get#, as: "account_subscriptions"
@@ -27,16 +29,28 @@ NPlus::Application.routes.draw do
   end
 
   resources :user_geos do
-        collection do
-            put 'update_account_geos'
-        end
+    collection do
+        put 'update_account_geos'
+    end
   end
   get "my_geos" => "user_geos#account_geos", :as => "account_geos"
 
   resources :sessions
 
+  resources :profiles do
+    collection do
+        put 'update_subscriptions'
+        put 'update_account_geos'
+    end
+  end
+  get "profile" => "profiles#define", as: "define_profile"
+
   post "rsvps/create" => "rsvps#create", as: "create_rsvp"
   resources :rsvps
+  put "rsvps/assign_host" => "rsvps#assign_host", as: "assign_host"
+
+
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

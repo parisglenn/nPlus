@@ -31,10 +31,14 @@
     <%= f.label :location %><br />
     <%= f.text_field :location %>
   </div>
+  
+
   <div class="field">
     <%= f.label :event_date %><br />
-    <%= f.text_field :event_date, 'data-behaviour' => 'datepicker' %>
+    <%= f.text_field :event_date, {:'data-behaviour' => 'datepicker'} %>
   </div>
+
+
   <div class="field">
     <%= f.label :geo %><br />
     <%= f.select :geo, options_for_select(generate_geo_dropdown) %>
@@ -53,3 +57,8 @@
     <%= f.submit %>
   </div>
 <% end %>
+<script>
+$(function(){
+  $('[data-behaviour~=datepicker]').datepicker();$('.datepicker').css({'backgroundColor':'#FFFFFF !important'});
+});
+</script>
