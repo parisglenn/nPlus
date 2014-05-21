@@ -1,6 +1,8 @@
 NPlus::Application.routes.draw do
+  devise_for :users
+
   get "log_in" => "sessions#new", :as => "log_in"
-  get "sign_up" => "users#new", :as => "sign_up"
+  get "sign_up" => "users#new", :as => "sign_up" #/users/sign_up Devise::RegistrationsController#new
   get "log_out" => "sessions#destroy", :as => "log_out"
 
   root :to => "home#index"
@@ -20,7 +22,10 @@ NPlus::Application.routes.draw do
   #match '/users', to: 'profiles#index', via: 'get', as: 'users'
   resources :sessions
 
-
+  devise_scope :user do 
+    root to: 'static_pages#home'
+    match '/sessions/user', to: 'devise/sessions#create', via: :post
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
