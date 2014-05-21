@@ -13,14 +13,6 @@
 
 ActiveRecord::Schema.define(:version => 20140507130631) do
 
-  create_table "event_tag_types", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-ActiveRecord::Schema.define(:version => 20140309230020) do
-
   create_table "deprecated_users_table", :force => true do |t|
     t.string   "full_name"
     t.string   "email"
@@ -33,6 +25,12 @@ ActiveRecord::Schema.define(:version => 20140309230020) do
 
   add_index "deprecated_users_table", ["office_id"], :name => "index_users_on_office_id"
   add_index "deprecated_users_table", ["team_id"], :name => "index_users_on_team_id"
+
+  create_table "event_tag_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "event_tags", :force => true do |t|
     t.integer  "event_id"
