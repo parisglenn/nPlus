@@ -1,4 +1,5 @@
 class GeosController < ApplicationController
+  before_filter :authorize_admin
   def index
     @geos = Geo.all
 

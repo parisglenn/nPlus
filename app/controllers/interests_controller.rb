@@ -1,4 +1,5 @@
 class InterestsController < ApplicationController
+  before_filter :authorize_admin
   def index
     @interests = Interest.all
 

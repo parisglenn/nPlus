@@ -12,24 +12,23 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :full_name %><br />
-    <%= f.text_field :full_name %>
+    <%#= f.label :full_name %><br />
+    <%#= f.text_field :full_name %>
   </div>
   <div class="field">
     <%= f.label :email %><br />
     <%= f.text_field :email %>
   </div>
   <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password %>
+    <%= f.label :admin %>
+    <%= f.check_box :admin %>
+  <div class="field">
+    <%#= f.label :office %><br />
+    <%#= f.select :office, options_for_select(generate_office_dropdown) %>
   </div>
   <div class="field">
-    <%= f.label :office %><br />
-    <%= f.select :office, options_for_select(generate_office_dropdown) %>
-  </div>
-  <div class="field">
-    <%= f.label :team %><br />
-    <%= f.select :team, options_for_select(generate_team_dropdown) %>
+    <%#= f.label :team %><br />
+    <%#= f.select :team, options_for_select(generate_team_dropdown) %>
   </div>
   <div class="actions">
     <%= f.submit %>

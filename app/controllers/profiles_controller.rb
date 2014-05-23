@@ -1,5 +1,6 @@
 class ProfilesController < ApplicationController
 
+  #TO DO - add round up times to define, and it's own update method - also edit its view
   def define
     #get user geos
     @user_geos = UserGeo.where user_id: current_user.id
@@ -17,37 +18,40 @@ class ProfilesController < ApplicationController
 
   def update_subscriptions
     @current_subscriptions = Subscription.where(user_id: current_user.id)
-    @new_subscriptions = params[:interests].keys
-    delete_tags = []
-    current_tag_names = []
-    @current_subscriptions.each do |cs|
-      interest = Interest.where(id: cs.interest_id).last
-      unless @new_subscriptions.include? interest.name
-        delete_tags << interest.name
+    if params[:interests].nil?
+      @current_subscriptions.each { |s| s.destroy }
+    else  
+      @new_subscriptions = params[:interests].keys
+      delete_tags = []
+      current_tag_names = []
+      @current_subscriptions.each do |cs|
+        interest = Interest.where(id: cs.interest_id).last
+        unless @new_subscriptions.include? interest.name
+          delete_tags << interest.name
+        end
+        current_tag_names << interest.name
       end
-      current_tag_names << interest.name
-    end
-    delete_tags.each do |dt|
-      interest = Interest.where(name: dt).last
-      old_tag = Subscription.where(user_id: current_user.id).where(interest_id: interest.id).last
-      old_tag.destroy
-    end
-    # how to destroy multiple records at once?
+      delete_tags.each do |dt|
+        interest = Interest.where(name: dt).last
+        old_tag = Subscription.where(user_id: current_user.id).where(interest_id: interest.id).last
+        old_tag.destroy
+      end
+      # how to destroy multiple records at once?
 
-    add_tags = []
-    @new_subscriptions.each do |ns|
-      unless current_tag_names.include? ns
-        add_tags << ns
+      add_tags = []
+      @new_subscriptions.each do |ns|
+        unless current_tag_names.include? ns
+          add_tags << ns
+        end
+      end
+      add_tags.each do |at|
+        interest = Interest.where(name: at).last
+        Subscription.create!({
+          user_id: current_user.id,
+          interest_id: interest.id
+        })
       end
     end
-    add_tags.each do |at|
-      interest = Interest.where(name: at).last
-      Subscription.create!({
-        user_id: current_user.id,
-        interest_id: interest.id
-      })
-    end
-
     flash[:notice] = "Subscriptions updated successfully"
 
     redirect_to define_profile_path #root_path
@@ -55,35 +59,39 @@ class ProfilesController < ApplicationController
 
   def update_account_geos
     @current_user_geos = UserGeo.where(user_id: current_user.id)
-    @new_user_geos = params[:geos].keys
-    delete_tags = []
-    current_tag_names = []
-    @current_user_geos.each do |ug|
-      geo = Geo.where(id: ug.geo_id).last
-      unless @new_user_geos.include? geo.name
-        delete_tags << geo.name
+    if params[:geos].nil?
+      @current_user_geos.each { |g| g.destroy }
+    else  
+      @new_user_geos = params[:geos].keys
+      delete_tags = []
+      current_tag_names = []
+      @current_user_geos.each do |ug|
+        geo = Geo.where(id: ug.geo_id).last
+        unless @new_user_geos.include? geo.name
+          delete_tags << geo.name
+        end
+        current_tag_names << geo.name
       end
-      current_tag_names << geo.name
-    end
-    delete_tags.each do |dt|
-      geo = Geo.where(name: dt).last
-      old_tag = UserGeo.where(user_id: current_user.id).where(geo_id: geo.id).last
-      old_tag.destroy
-    end
-    # how to destroy multiple records at once?
+      delete_tags.each do |dt|
+        geo = Geo.where(name: dt).last
+        old_tag = UserGeo.where(user_id: current_user.id).where(geo_id: geo.id).last
+        old_tag.destroy
+      end
+      # how to destroy multiple records at once?
 
-    add_tags = []
-    @new_user_geos.each do |ug|
-      unless current_tag_names.include? ug
-        add_tags << ug
+      add_tags = []
+      @new_user_geos.each do |ug|
+        unless current_tag_names.include? ug
+          add_tags << ug
+        end
       end
-    end
-    add_tags.each do |at|
-      geo = Geo.where(name: at).last
-      UserGeo.create!({
-        user_id: current_user.id,
-        geo_id: geo.id
-      })
+      add_tags.each do |at|
+        geo = Geo.where(name: at).last
+        UserGeo.create!({
+          user_id: current_user.id,
+          geo_id: geo.id
+        })
+      end
     end
 
     flash[:notice] = "Geographic settings updated successfully"

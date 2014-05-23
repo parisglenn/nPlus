@@ -3,7 +3,7 @@ module ApplicationHelper
 		{:declined => "Can't Go", :attending => "I'm going", :maybe => "Maybe"}
 	end
 
-	def get_status_messages
+	def get_status_messages #change to get_rsvp_status_messages
 		{attending: "You're going!", declined: "You're not going", maybe: "Maybe", undecided: "Not sure yet"}
 	end
 
@@ -55,6 +55,14 @@ module ApplicationHelper
 							["10:00PM", "2200"], ["11:00PM", "2300"]
 							]
 		return @times
+	end
+
+	def generate_days_of_week_dropdown
+		[['Monday','Monday'],['Tuesday','Tuesday'],['Wednesday','Wednesday'],['Thursday','Thursday'],['Friday','Friday'],['Saturday','Saturday'],['Sunday','Sunday']]	
+	end
+
+	def get_days_of_week
+		['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 	end
 
 	#format time

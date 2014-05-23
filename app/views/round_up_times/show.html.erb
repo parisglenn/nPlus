@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Day:</b>
+  <%= @round_up_time.day %>
+</p>
+
+<p>
+  <b>Start hour:</b>
+  <%= @round_up_time.start_hour %>
+</p>
+
+<p>
+  <b>End hour:</b>
+  <%= @round_up_time.end_hour %>
+</p>
+
+<p>
+  <b>Deprecated:</b>
+  <%= @round_up_time.deprecated %>
+</p>
+
+
+<%= link_to 'Edit', edit_round_up_time_path(@round_up_time) %> |
+<%= link_to 'Back', round_up_times_path %>

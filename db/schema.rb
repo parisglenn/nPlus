@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140507130631) do
+ActiveRecord::Schema.define(:version => 20140522132329) do
 
   create_table "deprecated_users_table", :force => true do |t|
     t.string   "full_name"
@@ -77,6 +77,15 @@ ActiveRecord::Schema.define(:version => 20140507130631) do
 
   add_index "offices", ["geo_id"], :name => "index_offices_on_geo_id"
 
+  create_table "round_up_times", :force => true do |t|
+    t.string   "day"
+    t.integer  "start_hour"
+    t.integer  "end_hour"
+    t.boolean  "deprecated"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "rsvps", :force => true do |t|
     t.boolean  "host"
     t.string   "status"
@@ -127,6 +136,7 @@ ActiveRecord::Schema.define(:version => 20140507130631) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.boolean  "admin"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

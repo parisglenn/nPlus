@@ -1,0 +1,33 @@
+<%= form_for(@round_up_time) do |f| %>
+  <% if @round_up_time.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@round_up_time.errors.count, "error") %> prohibited this round_up_time from being saved:</h2>
+
+      <ul>
+      <% @round_up_time.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :day %><br />
+    <%= f.select :day, get_days_of_week %>
+  </div>
+  <div class="field">
+    <%= f.label :start_hour %><br />
+    <%= f.select :start_hour, options_for_select(generate_time_dropdown) %>
+  </div>
+  <div class="field">
+    <%= f.label :end_hour %><br />
+    <%= f.select :end_hour, options_for_select(generate_time_dropdown) %>
+  </div>
+  <div class="field">
+    <%= f.label :deprecated %><br />
+    <%= f.check_box :deprecated %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

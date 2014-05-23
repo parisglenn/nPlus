@@ -9,25 +9,36 @@
 <body>
     <p class="navbar-text pull-right">
       <% if user_signed_in? %>
+        <% if current_user.admin %>
+          <%= link_to 'Round Up Times', round_up_times_path %> |
+          <%= link_to 'Geos', geos_path %> |  
+          <%= link_to 'Interests', interests_path %> |
+          <%= link_to 'Users', users_path %> |
+        <% end %>
         Logged in as <strong><%= current_user.email %></strong>.
-        <%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %> |
+        <%= link_to 'Home', root_path %> |
+        <%= link_to 'Preferences', define_profile_path %> |
+        <%= link_to 'Account Settings', edit_user_registration_path, :class => 'navbar-link' %> |
         <%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
       <% else %>
         <%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %> |
         <%= link_to "Login", new_user_session_path, :class => 'navbar-link'  %>
       <% end %>
 
-<!-- do i still need the notice and alert below? -->
-<% if notice %>
+<!-- <% if notice %>
        <p class="notice"><%= notice %></p>
 <% end %>
 <% if alert %>
        <p class="alert"><%= alert %></p>
-<% end %>
+<% end %> -->
 
     <div class="container-fluid" style="min-height: 575px;" id="main-body-container">
       <% flash.each do |key, value| %>
-        <div class="alert alert-<%= key %>"><%= value %></div>
+        <div class="row-fluid">
+          <div class="span12">
+           <div class="alert alert-<%=key%>"><%= value %></div>
+          </div>
+        </div>
       <% end %>
       <%= yield %>
     </div>

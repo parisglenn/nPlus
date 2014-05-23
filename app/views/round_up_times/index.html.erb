@@ -1,0 +1,29 @@
+<h1>Listing round_up_times</h1>
+
+<table>
+  <tr>
+    <th>Day</th>
+    <th>Start hour</th>
+    <th>End hour</th>
+    <th>Deprecated</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @round_up_times.each do |round_up_time| %>
+  <tr>
+    <td><%= round_up_time.day %></td>
+    <td><%= round_up_time.start_hour %></td>
+    <td><%= round_up_time.end_hour %></td>
+    <td><%= round_up_time.deprecated %></td>
+    <td><%= link_to 'Show', round_up_time %></td>
+    <td><%= link_to 'Edit', edit_round_up_time_path(round_up_time) %></td>
+    <td><%= link_to 'Destroy', round_up_time, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Round up time', new_round_up_time_path %>

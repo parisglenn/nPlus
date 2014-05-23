@@ -1,4 +1,10 @@
 NPlus::Application.routes.draw do
+  resources :round_up_times
+
+
+  resources :create_round_up_times
+
+
   devise_for :users
 
   get "log_in" => "sessions#new", :as => "log_in"
