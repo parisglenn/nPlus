@@ -29,9 +29,9 @@ module ApplicationHelper
 		return @team_dropdown_list
 	end
 
-	def generate_geo_dropdown
+	def generate_geo_dropdown optional=false
 		@geos = Geo.all
-		@geo_dropdown_list = Array.new
+		@geo_dropdown_list = optional ? [[nil,nil]] : []
 
 		@geos.each do |geo|
 			@geo_dropdown_list << ["#{geo.name}", geo.id.to_i]
@@ -74,5 +74,15 @@ module ApplicationHelper
 			hemiday = "pm"
 		end
 		hour+':'+minute+' '+hemiday
+	end
+
+	#make a round_up_time into a string that is html form friendly
+	def concat_rut round_up_time
+		round_up_time.day+'-'+round_up_time.start_hour
+	end
+
+	def uncat_rut round_up_time
+		day, hour = round_up_time.split('-')
+		return day, hour
 	end
 end

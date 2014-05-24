@@ -3,10 +3,6 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate_user!
   #helper_method :current_user
 
-  def authorize_admin
-
-  end
-
 	def authorize_admin
 	  unless current_user.admin
 	    flash[:error] = "You have been redirected as you do not have permission to access the requested page"

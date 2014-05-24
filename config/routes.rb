@@ -1,6 +1,7 @@
 NPlus::Application.routes.draw do
   resources :round_up_times
 
+  #get "my_round_up_times" => "round_up_times#account_round_up_times", :as => "account_round_up_times"
 
   resources :create_round_up_times
 
@@ -47,6 +48,7 @@ NPlus::Application.routes.draw do
     collection do
         put 'update_subscriptions'
         put 'update_account_geos'
+        put 'update_round_up_times'
     end
   end
   get "profile" => "profiles#define", as: "define_profile"

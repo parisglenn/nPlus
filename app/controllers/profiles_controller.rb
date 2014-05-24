@@ -7,13 +7,20 @@ class ProfilesController < ApplicationController
     @existing_user_geo_ids = []
     @user_geos.each { |s| @existing_user_geo_ids << s.geo_id }
     @geos = Geo.all
-    #render partial: "account_geos"
     
     #get account subscriptions
     @subscriptions = Subscription.where user_id: current_user.id
     @existing_subscription_ids = @subscriptions.map { |s| s.interest_id }
     @interests = Interest.all
-    #render partial: "account_subscriptions"
+
+    #get round up times
+    @existing_round_up_times = RoundUpUserAvailability.where user_id: current_user.id
+    # delete?   @existing_round_up_time_ids = @existing_round_up_times.map { |r| r.round_up_time_id }
+    @existing_round_up_time_geo_hash = {}
+    @existing_round_up_times.each do |rut|
+      @existing_round_up_time_geo_hash[rut.id] = rut.geo_id
+    end
+    @round_up_times = RoundUpTime.all
   end
 
   def update_subscriptions
@@ -61,6 +68,53 @@ class ProfilesController < ApplicationController
     @current_user_geos = UserGeo.where(user_id: current_user.id)
     if params[:geos].nil?
       @current_user_geos.each { |g| g.destroy }
+    else  
+      @new_user_geos = params[:geos].keys
+      delete_tags = []
+      current_tag_names = []
+      @current_user_geos.each do |ug|
+        geo = Geo.where(id: ug.geo_id).last
+        unless @new_user_geos.include? geo.name
+          delete_tags << geo.name
+        end
+        current_tag_names << geo.name
+      end
+      delete_tags.each do |dt|
+        geo = Geo.where(name: dt).last
+        old_tag = UserGeo.where(user_id: current_user.id).where(geo_id: geo.id).last
+        old_tag.destroy
+      end
+      # how to destroy multiple records at once?
+
+      add_tags = []
+      @new_user_geos.each do |ug|
+        unless current_tag_names.include? ug
+          add_tags << ug
+        end
+      end
+      add_tags.each do |at|
+        geo = Geo.where(name: at).last
+        UserGeo.create!({
+          user_id: current_user.id,
+          geo_id: geo.id
+        })
+      end
+    end
+
+    flash[:notice] = "Geographic settings updated successfully"
+
+    redirect_to define_profile_path #root_path
+  end
+
+  def update_round_up_times
+    @current_user_round_up_times = RoundUpUserAvailability.where(user_id: current_user.id)
+    if params[:round_up_times].nil?
+
+
+
+
+
+      @current_user_round_up_times.each { |g| g.destroy }
     else  
       @new_user_geos = params[:geos].keys
       delete_tags = []
