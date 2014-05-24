@@ -1,18 +1,19 @@
 <%= form_tag update_round_up_times_profiles_path, :method => :put do %> 
   <div class="field">
     <% @round_up_times.each do |rut| %>
-      <%= label_tag  "round_up_time-#{rut.id}", "#{rut.day} #{ft rut.start_hour}" %>
+      <%= label_tag  "round_up_time-#{rut.id}", "#{rut.day} #{ft rut.start_hour.to_s}" %>
 
       <select id="<%='round_up_time-'+rut.id.to_s%>" name="round_up_times[<%=rut.id%>]">
-        <% geo_id = @existing_round_up_time_geo_hash[rut.id] %>
-        <% (generate_geo_dropdown optional=true).each do |geo_id, geo_name| %>
-          <% if geo_id == geo.id %>
-            <option value="<%=geo_id%>" selected><%=geo.name%></option>
+        <% existing_geo_id = @existing_round_up_time_geo_hash[rut.id] %>
+        <% (generate_geo_dropdown optional=true).each do |geo_name, geo_id| %>
+          <% if existing_geo_id == geo_id %>
+            <option value="<%=geo_id%>" selected><%=geo_name%></option>
           <% else %>
-            <option value="<%=geo_id%>"><%=geo.name%></option>
+            <option value="<%=geo_id%>"><%=geo_name%></option>
           <% end %>
         <% end %>
-      </select> 
+      </select>
+      </br></br> 
     <% end %>
   </div>
   <%= submit_tag "Update", class: 'actions btn btn-info' %>

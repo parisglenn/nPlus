@@ -72,6 +72,7 @@ module ApplicationHelper
 		hemiday = "am"
 		if hour.to_i > 12
 			hemiday = "pm"
+			hour=(hour.to_i - 12).to_s
 		end
 		hour+':'+minute+' '+hemiday
 	end

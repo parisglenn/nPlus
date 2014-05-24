@@ -107,48 +107,47 @@ class ProfilesController < ApplicationController
   end
 
   def update_round_up_times
+    #keys are the ids of the round up time
+    #values are the id of the geo
     @current_user_round_up_times = RoundUpUserAvailability.where(user_id: current_user.id)
-    if params[:round_up_times].nil?
-
-
-
-
-
-      @current_user_round_up_times.each { |g| g.destroy }
-    else  
-      @new_user_geos = params[:geos].keys
-      delete_tags = []
-      current_tag_names = []
-      @current_user_geos.each do |ug|
-        geo = Geo.where(id: ug.geo_id).last
-        unless @new_user_geos.include? geo.name
-          delete_tags << geo.name
-        end
-        current_tag_names << geo.name
-      end
-      delete_tags.each do |dt|
-        geo = Geo.where(name: dt).last
-        old_tag = UserGeo.where(user_id: current_user.id).where(geo_id: geo.id).last
-        old_tag.destroy
-      end
-      # how to destroy multiple records at once?
-
-      add_tags = []
-      @new_user_geos.each do |ug|
-        unless current_tag_names.include? ug
-          add_tags << ug
-        end
-      end
-      add_tags.each do |at|
-        geo = Geo.where(name: at).last
-        UserGeo.create!({
-          user_id: current_user.id,
-          geo_id: geo.id
-        })
-      end
+    current_user_round_up_time_ids = @current_user_round_up_times.map { |rut| rut.round_up_time_id.to_s }
+    current_user_round_up_times_hash = {}
+    @current_user_round_up_times.each do |rut|
+      current_user_round_up_times_hash[rut.round_up_time_id.to_s] = rut.geo_id.to_s
     end
 
-    flash[:notice] = "Geographic settings updated successfully"
+    new_times_hash = {}
+    update_times_hash = {}
+    delete_times = []
+    params[:round_up_times].each do |rut_id,geo_id|
+      if geo_id == "" and current_user_round_up_time_ids.include? rut_id
+        delete_times << rut_id
+      elsif current_user_round_up_times_hash[rut_id] == nil  
+        new_times_hash[rut_id] = geo_id
+      elsif current_user_round_up_times_hash[rut_id] != geo_id
+        update_times_hash[rut_id] = geo_id
+      end
+    end
+    delete_times.each do |dt|
+      rut = RoundUpUserAvailability.where(user_id: current_user.id).where(round_up_time_id: dt.to_i).last
+      rut.destroy
+    end
+    new_times_hash.each do |rut_id,geo_id|
+      RoundUpUserAvailability.create!({
+        user_id: current_user.id,
+        round_up_time_id: rut_id.to_i,
+        geo_id: geo_id.to_i
+        })
+    end
+    update_times_hash.each do |rut_id,geo_id|
+      rut = RoundUpUserAvailability.
+      where(user_id: current_user.id).
+      where(round_up_time_id: rut_id.to_i).last
+      rut.geo_id = geo_id.to_i 
+      rut.save
+    end
+
+    flash[:notice] = "Round Up times updated successfully"
 
     redirect_to define_profile_path #root_path
   end
