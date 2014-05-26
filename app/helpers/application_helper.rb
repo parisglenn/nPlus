@@ -8,7 +8,7 @@ module ApplicationHelper
 	end
 
 	def generate_office_dropdown
-		@offices = Office.all
+		@offices = Geo.where location_type: 'office'
 		@offices_dropdown_list = Array.new
 
 		@offices.each do |office|
@@ -34,7 +34,7 @@ module ApplicationHelper
 		@geo_dropdown_list = optional ? [[nil,nil]] : []
 
 		@geos.each do |geo|
-			@geo_dropdown_list << ["#{geo.name}", geo.id.to_i]
+			@geo_dropdown_list << ["#{geo.name} (#{geo.location_type.classify})", geo.id.to_i]
 		end
 
 		return @geo_dropdown_list

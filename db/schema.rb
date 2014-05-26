@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140524052342) do
+ActiveRecord::Schema.define(:version => 20140526223446) do
 
   create_table "deprecated_users_table", :force => true do |t|
     t.string   "full_name"
@@ -58,8 +58,13 @@ ActiveRecord::Schema.define(:version => 20140524052342) do
 
   create_table "geos", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "parent_city"
+    t.integer  "parent_region"
+    t.integer  "parent_country"
+    t.integer  "parent_zone"
+    t.string   "location_type"
   end
 
   create_table "interests", :force => true do |t|

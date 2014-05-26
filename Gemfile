@@ -46,6 +46,8 @@ gem "therubyracer"
 gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
 gem "twitter-bootstrap-rails"
 
+gem 'acts_as_commentable_with_threading'
+
 # To use ActiveModel has_secure_password
  ######Why is this not loading? did version of ruby change or something?
  ################gem 'bcrypt-ruby', '~> 3.0.0'

@@ -5,41 +5,207 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-Geo.create!(:name => "New York")
-Geo.create!(:name => "Boston")
-Geo.create!(:name => "East Coast")
-Geo.create!(:name => "London")
-Geo.create!(:name => "Chicago")
-Geo.create!(:name => "US")
-Geo.create!(:name => "Emea")
 
-o2 = Office.new(:name => "New York - Broadway")
-o2.geo_id = 1
-o2.save!
-o3 = Office.create!({:name => "New York - Madison Ave", :geo_id => 1})
-o2.geo_id = 1
-o2.save!
-o4 = Office.create!({:name => "Boston", :geo_id => 2})
-o4.geo_id = 2
-o4.save!
-o5 = Office.create!({:name => "Chicago", :geo_id => 5})
-o5.geo_id = 5
-o5.save!
-o6 = Office.create!({:name => "London", :geo_id => 4})
-o6.geo_id = 4
-o6.save!
 
-Interest.create!(:name => "Sports")
-Interest.create!(:name => "Entertainment")
-Interest.create!(:name => "Music")
-Interest.create!(:name => "Technology")
-Interest.create!(:name => "Marketing")
-Interest.create!(:name => "Charity")
+# Interest.create!(:name => "Sports")
+# Interest.create!(:name => "Entertainment")
+# Interest.create!(:name => "Music")
+# Interest.create!(:name => "Technology")
+# Interest.create!(:name => "Marketing")
+# Interest.create!(:name => "Charity")
 
-Team.create!(:name => "Global Business Solutions")
-Team.create!(:name => "Engineering")
-Team.create!(:name => "Client Services")
-Team.create!(:name => "Sales")
-Team.create!(:name => "Marketing")
-Team.create!(:name => "Finance")
-Team.create!(:name => "Support")
+# Team.create!(:name => "Global Business Solutions")
+# Team.create!(:name => "Engineering")
+# Team.create!(:name => "Client Services")
+# Team.create!(:name => "Sales")
+# Team.create!(:name => "Marketing")
+# Team.create!(:name => "Finance")
+# Team.create!(:name => "Support")
+
+
+
+gzna=Geo.create!({
+	name: "North America",
+	location_type: "global_zone"
+	})
+gcus=Geo.create!({
+	name: "United States",
+	location_type: "country",
+	parent_zone: gzna.id
+	})
+greus=Geo.create!({
+	name: "US East",
+	location_type: "region",
+	parent_country: gcus.id
+	})
+gcny=Geo.create!({
+	name: "New York",
+	location_type: "city",
+	parent_region: greus.id
+	})
+gobw=Geo.create!({
+	name: "1440 Broadway - NY",
+	location_type: "office",
+	parent_city: gcny.id
+	})
+gomd=Geo.create!({
+	name: "Madison Ave - NY",
+	location_type: "office",
+	parent_city: gcny.id
+	})
+goaa=Geo.create!({
+	name: "Avenue of the Americas - NY",
+	location_type: "office",
+	parent_city: gcny.id
+	})
+gcbm=Geo.create!({
+	name: "Boston",
+	location_type: "city",
+	parent_region: greus.id
+	})
+gocm=Geo.create!({
+	name: "Cambridge",
+	location_type: "office",
+	parent_city: gcbm.id
+	})
+grmus=Geo.create!({
+	name: "US Midwest",
+	location_type: "region",
+	parent_country: gcus.id
+	})
+gcci=Geo.create!({
+	name: "Chicago",
+	location_type: "city",
+	parent_region: grmus.id
+	})
+goci=Geo.create!({
+	name: "Chicago Office",
+	location_type: "office",
+	parent_city: gcci.id
+	})
+grwus=Geo.create!({
+	name: "US West",
+	location_type: "region",
+	parent_country: gcus.id
+	})
+gcsf=Geo.create({
+	name: "San Francisco",
+	location_type: "city",
+	parent_region: grwus.id
+	})
+gosf=Geo.create!({
+	name: "San Francisco Office",
+	location_type: "office",
+	parent_city: gcsf.id
+	})
+grsus=Geo.create!({
+	name: "US South",
+	location_type: "region",
+	parent_country: gcus.id
+	})
+gcmf=Geo.create({
+	name: "Miami",
+	location_type: "city",
+	parent_region: grsus.id
+	})
+gomf=Geo.create!({
+	name: "Miami Office",
+	location_type: "office",
+	parent_city: gcmf.id
+	})
+gzsa=Geo.create!({
+	name: "South America",
+	location_type: "global_zone"
+	})
+gcbr=Geo.create!({
+	name: "Brazil",
+	location_type: "country",
+	parent_zone: gzsa.id
+	})
+grbr=Geo.create!({
+	name: "Brazil",
+	location_type: "region",
+	parent_country: gcbr.id
+	})
+gcspb=Geo.create!({
+	name: "Sao Paulo",
+	location_type: "city",
+	parent_region: grbr.id
+	})
+gospb=Geo.create!({
+	name: "Sao Paulo Office",
+	location_type: "office",
+	parent_city: gcspb.id
+	})
+gzsa=Geo.create!({
+	name: "South America",
+	location_type: "global_zone"
+	})
+gcbr=Geo.create!({
+	name: "Brazil",
+	location_type: "country",
+	parent_zone: gzsa.id
+	})
+grbr=Geo.create!({
+	name: "Brazil",
+	location_type: "region",
+	parent_country: gcbr.id
+	})
+gcspb=Geo.create!({
+	name: "Sao Paulo",
+	location_type: "city",
+	parent_region: grbr.id
+	})
+gospb=Geo.create!({
+	name: "Sao Paulo Office",
+	location_type: "office",
+	parent_city: gcspb.id
+	})
+gzemea=Geo.create!({
+	name: "EMEA",
+	location_type: "global_zone"
+	})
+gcuk=Geo.create!({
+	name: "United Kingdom",
+	location_type: "country",
+	parent_zone: gzemea.id
+	})
+gren=Geo.create!({
+	name: "England",
+	location_type: "region",
+	parent_country: gcuk.id
+	})
+gcluk=Geo.create!({
+	name: "London",
+	location_type: "city",
+	parent_region: gren.id
+	})
+goluk=Geo.create!({
+	name: "London Office",
+	location_type: "office",
+	parent_city: gcluk.id
+	})
+gzapac=Geo.create!({
+	name: "APAC",
+	location_type: "global_zone"
+	})
+gcjp=Geo.create!({
+	name: "Japan",
+	location_type: "country",
+	parent_zone: gzapac.id
+	})
+grjp=Geo.create!({
+	name: "Japan",
+	location_type: "region",
+	parent_country: gcjp.id
+	})
+gctk=Geo.create!({
+	name: "Tokyo",
+	location_type: "city",
+	parent_region: grjp.id
+	})
+gotk=Geo.create!({
+	name: "Tokyo Office",
+	location_type: "office",
+	parent_city: gctk.id
+	})
