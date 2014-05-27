@@ -1,16 +1,66 @@
 <%= form_tag update_account_geos_profiles_path, :method => :put do %> 
 
-  <div class="field">
-    <% @geos.each do |type| %>
-      <% if @existing_user_geo_ids.include? type.id %>
-        <%= check_box_tag('geos['+type.name+']', 1, true) %> <!--type.name?-->
-      <% else %>
-        <%= check_box_tag('geos['+type.name+']') %>
-      <% end %>
-      <%= label_tag('geos['+type.name+']', type.name) %>
-    <% end %>
+
+<% @geos.each do |type| %>
+  <div class="row">
+    <div class="span12">
+      <div class="row">
+        <div class="field">
+          <div class="span1">
+            <% if @existing_user_geo_ids.include? type.id %>
+              <%= check_box_tag('geos['+type.name+']', 1, true) %> <!--type.name?-->
+            <% else %>
+              <%= check_box_tag('geos['+type.name+']') %>
+            <% end %>
+          </div>
+          <div class="span11">
+            <%= label_tag('geos['+type.name+']', type.name+" ("+type.location_type.classify+")") %>
+          </div>
+        </div>
+      </div>
+    </div>  
   </div>
+<% end %>
   <!--p>By checking the box above, you will receive notifications regarding events which also have that geographic setting. </p-->
 <%= submit_tag "Update", class: 'actions btn btn-info' %>
 
 <% end %>
+
+<!--               <div class="accordion" id="accordion2">
+                <div class="accordion-group">
+                  <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                      Collapsible Group Item #1
+                    </a>
+                  </div>
+                  <div id="collapseOne" class="accordion-body collapse in">
+                    <div class="accordion-inner">
+                      Anim pariatur ..
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-group">
+                  <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                      Collapsible Group Item #2
+                    </a>
+                  </div>
+                  <div id="collapseTwo" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                      Anim pariatur ...
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-group">
+                  <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+                      Collapsible Group Item #3
+                    </a>
+                  </div>
+                  <div id="collapseThree" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                      Anim pariatur ....
+                    </div>
+                  </div>
+                </div>
+              </div> -->

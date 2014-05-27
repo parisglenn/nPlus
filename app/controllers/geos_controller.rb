@@ -62,7 +62,12 @@ class GeosController < ApplicationController
   	###dont destroy if there are events using this geo tag - display which events are causing the error
   	###also remove all user_geos with this geo id
     @geo = Geo.find(params[:id])
+    user_geos = UserGeo.where geo_id: @geo.id
+    user_geos.each do |ug|
+      ug.destroy
+    end
     @geo.destroy
+
 
     respond_to do |format|
       format.html { redirect_to geos_url }

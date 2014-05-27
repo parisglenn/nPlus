@@ -1,15 +1,25 @@
 <%= form_tag update_subscriptions_profiles_path, :method => :put do %> 
 
-  <div class="field">
-    <% @interests.each do |type| %>
-      <% if @existing_subscription_ids.include? type.id %>
-        <%= check_box_tag('interests['+type.name+']', 1, true) %> <!--type.name?-->
-      <% else %>
-        <%= check_box_tag('interests['+type.name+']') %>
-      <% end %>
-      <%= label_tag('interests['+type.name+']', type.name) %>
-    <% end %>
+<% @interests.each do |type| %>
+  <div class="row">
+    <div class="span12">
+      <div class="row">
+        <div class="field">
+          <div class="span1">
+            <% if @existing_subscription_ids.include? type.id %>
+              <%= check_box_tag('interests['+type.name+']', 1, true) %> <!--type.name?-->
+            <% else %>
+              <%= check_box_tag('interests['+type.name+']') %>
+            <% end %>
+          </div>
+          <div class="span11">
+            <%= label_tag('interests['+type.name+']', type.name) %>
+          </div>
+        </div>
+      </div>
+    </div>  
   </div>
+<% end %>
   <!--p>By checking the box above, you will receive notifications regarding events which also have that keyword. </p-->
 <%= submit_tag "Update", class: 'actions btn btn-info' %>
 

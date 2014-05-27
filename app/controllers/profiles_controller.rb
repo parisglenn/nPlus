@@ -21,6 +21,16 @@ class ProfilesController < ApplicationController
       @existing_round_up_time_geo_hash[rut.id] = rut.geo_id
     end
     @round_up_times = RoundUpTime.all
+    @office_ids = []
+    @city_ids = []
+    @geos.each do |g|
+      case g.location_type
+        when 'office'
+          @office_ids << g.id
+        when 'city'
+          @city_ids << g.id
+      end
+    end
   end
 
   def update_subscriptions
