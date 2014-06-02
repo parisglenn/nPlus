@@ -33,42 +33,8 @@
 <% end %>
 
 <script>
-
 $(document).ready(function (){
   $("#round_up_form").on("ajax:success", function(e, data, status, xhr){
-    console.log("update form")
-    //$("#round_up_form").append xhr.responseText
     $("#user_round_up_times").html(data)}
-    //alert("mmRoulette preferences updated successfully")
-  )}//.on("ajax:error", function(e, xhr, status, error){ 
-    //$("#round_up_form").append("<p>ERROR</p>")
-  //}
-)
-/*
-function updateUserRoundUpTimes()
-    var request = $.ajax({
-        url: <%= update_round_up_times_profiles_path %>,
-        method: 'Post',
-        dataType: 'html'
-    });
-    request.success(function(data){
-      user_round_up_times.html(data)
-        var locktime = data;
-        if (action == 'set') {
-               request.done(function(data) {
-                  modal_body.html(data);
-                });
-                modal_id.modal('show');
-                locktime_field_name.val(locktime)
-                if (embed_lock) {
-                    remove_lock_element.val(path)
-                }
-            }
-        };
-    );
-    request.error(function(data){
-        var r = confirm("An error occurred! The page you are viewing may have expired. Click OK to reload the page.")
-        if (r == true) {location.reload(true)}
-    });
-*/
+  )})
 </script>
