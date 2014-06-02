@@ -13,11 +13,11 @@
 
   <div class="field">
     <%= f.label :name %><br />
-    <%= f.text_field :name %>
+    <%= f.text_field :name, :required => true%>
   </div>
   <div class="field">
     <%= f.label :description %><br />
-    <%= f.text_area :description %>
+    <%= f.text_area :description, :required => true%>
   </div>
   <div class="field">
     <%= f.label :start_time %><br />
@@ -29,13 +29,13 @@
   </div>
   <div class="field">
     <%= f.label :location %><br />
-    <%= f.text_field :location %>
+    <%= f.text_field :location, :required => true %>
   </div>
   
 
   <div class="field">
     <%= f.label :event_date %><br />
-    <%= f.text_field :event_date, {:'data-behaviour' => 'datepicker'} %>
+    <%= f.text_field :event_date, {:'data-behaviour' => 'datepicker', :required => true} %>
   </div>
 
 
@@ -44,16 +44,27 @@
     <%= f.select :geo, options_for_select(generate_geo_dropdown) %>
   </div>
   Event Type
-  <div class="field">
-    <% @event_types.each do |type| %>
-      <% if @event_tag_ids.include? type.id %>
-        <%= check_box_tag('event_type['+type.name+']', 1, true, class: 'inline') %> <!--type.name?-->
-      <% else %>
-        <%= check_box_tag('event_type['+type.name+']', 0, false, class: 'inline') %>
-      <% end %>
-      <%= label_tag('event_type['+type.name+']', type.name, class: 'inline') %>
-    <% end %>
-  </div>
+  <% @event_types.each do |type| %>
+    <div class="row">
+      <div class="span12">
+        <div class="row">
+          <div class="field">
+            <div class="span1">
+              <% if @event_tag_ids.include? type.id %>
+                <%= check_box_tag('event_type['+type.name+']', 1, true) %> <!--type.name?-->
+              <% else %>
+                <%= check_box_tag('event_type['+type.name+']') %>
+              <% end %>
+            </div>
+            <div class="span11">
+              <%= label_tag('event_type['+type.name+']', type.name) %>
+            </div>
+          </div>
+        </div>
+      </div>  
+    </div>
+  <% end %>
+
   <div class="actions btn">
     <%= f.submit %>
   </div>

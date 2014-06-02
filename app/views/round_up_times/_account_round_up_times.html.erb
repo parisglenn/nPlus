@@ -1,12 +1,20 @@
-<%= form_tag update_round_up_times_profiles_path, :method => :put do %> 
+<% flash.each do |key, value| %>
+  <div class="row-fluid">
+    <div class="span12">
+     <div class="alert alert-<%=key%>"><%= value %></div>
+    </div>
+  </div>
+<% end %>
+
+<%= form_tag update_round_up_times_profiles_path, id: 'round_up_form', method: :put, remote: true do %> 
   <div class="field">
     <% @round_up_times.each do |rut| %>
       <%= label_tag  "round_up_time-#{rut.id}", "#{rut.day} #{ft rut.start_hour.to_s}" %>
-
       <select id="<%='round_up_time-'+rut.id.to_s%>" name="round_up_times[<%=rut.id%>]">
         <% existing_geo_id = @existing_round_up_time_geo_hash[rut.id] %>
         <% (generate_geo_dropdown optional=true).each do |geo_name, geo_id| %>
           <% if @office_ids.include? geo_id or @city_ids.include? geo_id or geo_name == nil%>
+
             <% if existing_geo_id == geo_id %>
               <option value="<%=geo_id%>" selected><%=geo_name%></option>
             <% else %>
@@ -18,5 +26,49 @@
       </br></br> 
     <% end %>
   </div>
-  <%= submit_tag "Update", class: 'actions btn btn-info' %>
+  <%= @success_message %>
+  <%= submit_tag "Update", class: 'btn btn-info' %>
+  <%#= submit_tag "Update", class: 'btn btn-info', remote: true, onclick: "updateUserRoundUpTimes();", method: put %>
+  <%#= link_to "Edit", '#', :class => 'actions btn btn-small btn-info', :remote => true, :method => 'get', :onclick => "getUser(#{user.id})" %>
 <% end %>
+
+<script>
+
+$(document).ready(function (){
+  $("#round_up_form").on("ajax:success", function(e, data, status, xhr){
+    console.log("update form")
+    //$("#round_up_form").append xhr.responseText
+    $("#user_round_up_times").html(data)}
+    //alert("mmRoulette preferences updated successfully")
+  )}//.on("ajax:error", function(e, xhr, status, error){ 
+    //$("#round_up_form").append("<p>ERROR</p>")
+  //}
+)
+/*
+function updateUserRoundUpTimes()
+    var request = $.ajax({
+        url: <%= update_round_up_times_profiles_path %>,
+        method: 'Post',
+        dataType: 'html'
+    });
+    request.success(function(data){
+      user_round_up_times.html(data)
+        var locktime = data;
+        if (action == 'set') {
+               request.done(function(data) {
+                  modal_body.html(data);
+                });
+                modal_id.modal('show');
+                locktime_field_name.val(locktime)
+                if (embed_lock) {
+                    remove_lock_element.val(path)
+                }
+            }
+        };
+    );
+    request.error(function(data){
+        var r = confirm("An error occurred! The page you are viewing may have expired. Click OK to reload the page.")
+        if (r == true) {location.reload(true)}
+    });
+*/
+</script>

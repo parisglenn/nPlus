@@ -13,9 +13,11 @@
           <strong>RSVP </strong> <%= status_messages[event.status] %>
       </div>
       <div class="span2">
+        <% unless event.hosts_include? current_user %>
           <% actions.each do |action| %>
             <%= render partial: "events/rsvp", content_type: 'text/html', locals: { event: event, respond_with: respond_with, action: action } %>
           <% end %>
+        <% end %>
       </div>
     </div>
   </div>

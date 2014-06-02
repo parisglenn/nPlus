@@ -10,7 +10,7 @@ class RsvpsController < ApplicationController
 		if @rsvp.save
 			case params[:respond_with]
 			when "events"
-				@user_events = Rsvp.find_current_user_attending_events @rsvp.user_id
+				#@user_events = Rsvp.find_current_user_attending_events @rsvp.user_id
 				redirect_to root_path
 				#render partial: 'events/user_events'  -- when i use an ajax call
 			when "event"

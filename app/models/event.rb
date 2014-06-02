@@ -13,6 +13,13 @@ class Event < ActiveRecord::Base
     @status
   end
 
+  def hosts_include? user
+    user_ids = self.rsvps.map do |rsvp|
+      rsvp.user_id
+    end
+    user_ids.include? user.id
+  end
+
   def attending_users
   	users = Rsvp.where(event_id: self.id).map { |r| r.user_id }
   	#I should be adding this to an event object that is not an active record object

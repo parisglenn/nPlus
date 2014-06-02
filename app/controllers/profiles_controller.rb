@@ -2,35 +2,9 @@ class ProfilesController < ApplicationController
 
   #TO DO - add round up times to define, and it's own update method - also edit its view
   def define
-    #get user geos
-    @user_geos = UserGeo.where user_id: current_user.id
-    @existing_user_geo_ids = []
-    @user_geos.each { |s| @existing_user_geo_ids << s.geo_id }
-    @geos = Geo.all
-    
-    #get account subscriptions
-    @subscriptions = Subscription.where user_id: current_user.id
-    @existing_subscription_ids = @subscriptions.map { |s| s.interest_id }
-    @interests = Interest.all
-
-    #get round up times
-    @existing_round_up_times = RoundUpUserAvailability.where user_id: current_user.id
-    # delete?   @existing_round_up_time_ids = @existing_round_up_times.map { |r| r.round_up_time_id }
-    @existing_round_up_time_geo_hash = {}
-    @existing_round_up_times.each do |rut|
-      @existing_round_up_time_geo_hash[rut.id] = rut.geo_id
-    end
-    @round_up_times = RoundUpTime.all
-    @office_ids = []
-    @city_ids = []
-    @geos.each do |g|
-      case g.location_type
-        when 'office'
-          @office_ids << g.id
-        when 'city'
-          @city_ids << g.id
-      end
-    end
+    get_user_geos
+    get_account_subscriptions
+    get_round_up_times
   end
 
   def update_subscriptions
@@ -156,9 +130,45 @@ class ProfilesController < ApplicationController
       rut.geo_id = geo_id.to_i 
       rut.save
     end
+    get_round_up_times
 
-    flash[:notice] = "Round Up times updated successfully"
-
-    redirect_to define_profile_path #root_path
+    @success_message = "Round Up times updated successfully"
+    render partial: 'round_up_times/account_round_up_times'
+    #redirect_to define_profile_path #root_path
   end
+
+  private
+    def get_round_up_times
+      @geos = Geo.all
+      @existing_round_up_times = RoundUpUserAvailability.where user_id: current_user.id
+      # delete?   @existing_round_up_time_ids = @existing_round_up_times.map { |r| r.round_up_time_id }
+      @existing_round_up_time_geo_hash = {}
+      @existing_round_up_times.each do |rut|
+        @existing_round_up_time_geo_hash[rut.round_up_time_id] = rut.geo_id
+      end
+      @round_up_times = RoundUpTime.all
+      @office_ids = []
+      @city_ids = []
+      @geos.each do |g|
+        case g.location_type
+          when 'office'
+            @office_ids << g.id
+          when 'city'
+            @city_ids << g.id
+        end
+      end
+    end
+    
+    def get_account_subscriptions
+      @subscriptions = Subscription.where user_id: current_user.id
+      @existing_subscription_ids = @subscriptions.map { |s| s.interest_id }
+      @interests = Interest.all
+    end
+
+    def get_user_geos
+      @user_geos = UserGeo.where user_id: current_user.id
+      @existing_user_geo_ids = []
+      @user_geos.each { |s| @existing_user_geo_ids << s.geo_id }
+      @geos = Geo.all
+    end
 end
