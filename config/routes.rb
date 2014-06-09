@@ -49,9 +49,11 @@ NPlus::Application.routes.draw do
         put 'update_subscriptions'
         put 'update_account_geos'
         put 'update_round_up_times'
+        put 'update_notification_frequencies'
     end
   end
   get "profile" => "profiles#define", as: "define_profile"
+  get "admin_hub" => "admins#hub", as: "admin_hub"
 
   post "rsvps/create" => "rsvps#create", as: "create_rsvp"
   resources :rsvps

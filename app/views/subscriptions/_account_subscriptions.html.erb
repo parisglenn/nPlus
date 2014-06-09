@@ -1,4 +1,4 @@
-<%= form_tag update_subscriptions_profiles_path, :method => :put do %> 
+<%= form_tag update_subscriptions_profiles_path, id: 'account_subscriptions_form', method: :put, remote: true do %> 
 
 <% @interests.each do |type| %>
   <div class="row">
@@ -20,7 +20,18 @@
     </div>  
   </div>
 <% end %>
-  <!--p>By checking the box above, you will receive notifications regarding events which also have that keyword. </p-->
+<div class="row">
+  <div class="span12">
+    <%= @success_message %>
+  </div>
+</div>
 <%= submit_tag "Update", class: 'actions btn btn-info' %>
 
 <% end %>
+
+<script>
+$(document).ready(function (){
+  $("#account_subscriptions_form").on("ajax:success", function(e, data, status, xhr){
+    $("#account_subscriptions").html(data)}
+  )})
+</script>

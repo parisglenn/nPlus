@@ -65,6 +65,10 @@ module ApplicationHelper
 		['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 	end
 
+	def generate_notification_frequencies_dropdown
+		[['Immediately','immediately'],['Daily','daily'],['Weekly','Weekly'],['Never','never']]
+	end
+
 	#format time
 	def ft hm
 		minute = hm[-2..-1]

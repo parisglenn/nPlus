@@ -1,31 +1,55 @@
 <div class="row-fluid"></div>
-<div class="container">
-	<div class="row-fluid">
-		<div class="span8">
-	<!-- 		<div class="center"> -->
-			<h2 class="center offset1">Event Notifications</h2>
-			<div class="row">
-				<div class="span4">
-					<h4> Geographic settings </h4>
-					<%= render partial: 'user_geos/account_geos' %>
-				</div>
-				<div class="span4 offset2">	
-					<h4> Interests </h4>
-					<%= render partial: 'subscriptions/account_subscriptions' %>
-				</div>	
-			</div>
+
+		<div class="row-fluid">
+			<ul class="nav nav-tabs">
+			  <li class="active">
+			  	<a href="#account_geos" data-toggle="tab" class="">
+			  		<span>Geographic Settings</span>
+			  	</a>
+			  </li>
+
+			  <li class="">
+			  	<a href="#account_subscriptions" data-toggle="tab" class="">
+			  		<span>Interests</span>
+			  	</a>
+			  </li>
+
+			  <li class="">
+			  	<a href="#account_round_up_times" data-toggle="tab" class="">
+			  		<span>Round Up Times</span>
+			  	</a>
+			  </li> 
+			  <li class="">
+			  	<a href="#notification_frequencies" data-toggle="tab" class="">
+			  		<span>Info & Email Notifications</span>
+			  	</a>
+			  </li> 
+			  <li class="">
+			  	<a href="#password" data-toggle="tab" class="">
+			  		<span>Password</span>
+			  	</a>
+			  </li> 
+			</ul>
 		</div>
 
-		<div class="span4">
-			<h2> Round Up </h2>
-			<div class="row">
-				<div class="span12">
-					<h4> Weekly Availabilities </h4>
-					<div id="user_round_up_times">
-						<%= render partial: 'round_up_times/account_round_up_times' %>
-					</div>
+<div class="tab-content">
+
+				<div class="tab-pane fade in active" id="account_geos">
+					<%= render partial: 'user_geos/account_geos' %>
 				</div>
-			</div>
-		</div>
-	</div>
+          
+
+				<div class="tab-pane fade in active" id="account_subscriptions">
+					<%= render partial: 'subscriptions/account_subscriptions' %>
+				</div>
+
+				<div class="tab-pane fade" id="account_round_up_times">
+					<%= render partial: 'round_up_times/account_round_up_times' %>
+				</div>
+				<div class="tab-pane fade" id="notification_frequencies">
+					<%= render partial: 'users/email_frequencies' %>
+				</div>
+				<div class="tab-pane fade" id="password">
+					<%= render partial: 'users/password' %>
+				</div>
 </div>

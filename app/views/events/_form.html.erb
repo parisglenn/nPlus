@@ -21,11 +21,11 @@
   </div>
   <div class="field">
     <%= f.label :start_time %><br />
-    <%= f.select :start_time, options_for_select(generate_time_dropdown) %>
+    <%= f.select :start_time, options_for_select(generate_time_dropdown, @event.start_time) %>
   </div>
   <div class="field">
     <%= f.label :end_time %><br />
-    <%= f.select :end_time, options_for_select(generate_time_dropdown) %>
+    <%= f.select :end_time, options_for_select(generate_time_dropdown, @event.end_time) %>
   </div>
   <div class="field">
     <%= f.label :location %><br />
@@ -41,7 +41,7 @@
 
   <div class="field">
     <%= f.label :geo %><br />
-    <%= f.select :geo, options_for_select(generate_geo_dropdown) %>
+    <%= f.select :geo, options_for_select(generate_geo_dropdown, @event.geo_id) %>
   </div>
   Event Type
   <% @event_types.each do |type| %>

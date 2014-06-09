@@ -5,6 +5,7 @@ class ProfilesController < ApplicationController
     get_user_geos
     get_account_subscriptions
     get_round_up_times
+    @user = User.find current_user.id
   end
 
   def update_subscriptions
@@ -43,9 +44,10 @@ class ProfilesController < ApplicationController
         })
       end
     end
-    flash[:notice] = "Subscriptions updated successfully"
-
-    redirect_to define_profile_path #root_path
+    get_account_subscriptions
+    
+    @success_message = "Interests updated successfully"
+    render partial: 'subscriptions/account_subscriptions'
   end
 
   def update_account_geos
@@ -84,10 +86,10 @@ class ProfilesController < ApplicationController
         })
       end
     end
+    get_user_geos
 
-    flash[:notice] = "Geographic settings updated successfully"
-
-    redirect_to define_profile_path #root_path
+    @success_message = "Geographic settings updated successfully"
+    render partial: 'user_geos/account_geos'
   end
 
   def update_round_up_times
@@ -134,7 +136,10 @@ class ProfilesController < ApplicationController
 
     @success_message = "Round Up times updated successfully"
     render partial: 'round_up_times/account_round_up_times'
-    #redirect_to define_profile_path #root_path
+  end
+
+  def update_notification_frequency
+
   end
 
   private

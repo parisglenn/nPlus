@@ -79,6 +79,10 @@ class UsersController < ApplicationController
 
       respond_to do |format|
         if @user.update_attributes(params[:user])
+          if params[:redirect] == "profile"
+            @success_message = "Email preferences successfully updated"
+            render partial: 'users/email_frequencies' and return
+          end
           format.html { redirect_to @user, notice: 'User was successfully updated.' }
           format.json { head :no_content }
         else

@@ -1,0 +1,59 @@
+<%= form_for(@user, remote: true, html: {id: "notification_frequency_form"}, method: :put) do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+      <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :first_name %><br />
+    <%= f.text_field :first_name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :last_name %><br />
+    <%= f.text_field :last_name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :team_id %><br />
+    <%= f.select :team_id, options_for_select(generate_team_dropdown, @user.team_id) %>
+  </div>
+
+  <div class="field">
+    <%= f.label :office_id %><br />
+    <%= f.select :office_id, options_for_select(generate_office_dropdown, @user.office_id) %>
+  </div>
+
+  <h1> Email Preferences </h1>
+  <div class="field">
+    <%= f.label :event_notification_frequency %><br />
+    <%= f.select :event_notification_frequency, options_for_select(generate_notification_frequencies_dropdown, @user.event_notification_frequency) %>
+  </div>
+  <div class="field">
+    <%= f.label :round_up_notification_frequency %><br />
+    <%= f.select :round_up_notification_frequency, options_for_select(generate_notification_frequencies_dropdown, @user.round_up_notification_frequency) %>
+  </div>
+  <input name="redirect" type="hidden" value="profile">
+  <div>
+    <%= @success_message %></br>
+  </div>
+  <div class="actions btn">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<script>
+$(document).ready(function (){
+  console.log("entered function")
+  $("#notification_frequency_form").on("ajax:success", function(e, data, status, xhr){
+    console.log("reloading info")
+    $("#notification_frequencies").html(data)}
+  )})
+</script>

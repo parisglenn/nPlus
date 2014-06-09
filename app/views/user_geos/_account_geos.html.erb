@@ -1,5 +1,4 @@
-<%= form_tag update_account_geos_profiles_path, :method => :put do %> 
-
+<%= form_tag update_account_geos_profiles_path, id: 'account_geos_form', method: :put, remote: true do %> 
 
 <% @geos.each do |type| %>
   <div class="row">
@@ -21,11 +20,22 @@
     </div>  
   </div>
 <% end %>
-  <!--p>By checking the box above, you will receive notifications regarding events which also have that geographic setting. </p-->
+<div class="row">
+  <div class="span12">
+    <%= @success_message %>
+  </div>
+</div>
+
 <%= submit_tag "Update", class: 'actions btn btn-info' %>
 
 <% end %>
 
+<script>
+$(document).ready(function (){
+  $("#account_geos_form").on("ajax:success", function(e, data, status, xhr){
+    $("#account_geos").html(data)}
+  )})
+</script>
 <!--               <div class="accordion" id="accordion2">
                 <div class="accordion-group">
                   <div class="accordion-heading">

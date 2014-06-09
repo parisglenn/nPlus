@@ -15,6 +15,26 @@
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </div>
+  <div class="field">
+    <%= f.label :location_type %><br />
+    <%= f.select :location_type, options_for_select(generate_location_type_dropdown) %>
+  </div>
+  <div class="field">
+    <%= f.label :parent_city %><br />
+    <%= f.select :parent_city, options_for_select(generate_parent_city_dropdown) %>
+  </div>
+  <div class="field">
+    <%= f.label :parent_region %><br />
+    <%= f.select :parent_region, options_for_select(generate_parent_region_dropdown) %>
+  </div>
+  <div class="field">
+    <%= f.label :parent_country %><br />
+    <%= f.select :parent_country, options_for_select(generate_parent_country_dropdown) %>
+  </div>
+  <div class="field">
+    <%= f.label :parent_zone %><br />
+    <%= f.select :parent_zone, options_for_select(generate_parent_zone_dropdown) %>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>
