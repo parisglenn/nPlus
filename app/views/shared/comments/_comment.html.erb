@@ -1,0 +1,19 @@
+<div id="comment-<%= comment.id %>" class="comment">
+	<div class="row-fluid">
+		<div class="span6"><%= link_to(get_user(comment.user_id), user_path(comment.user.login), :class => 'entity-link') %></div>
+		
+		<div class="span6">
+			<div class="pull-right">
+				<%= comment.created_at.in_time_zone("Eastern Time (US & Canada)").strftime("%B %d, %Y %I:%M %p") %>
+				<% if comment.user_id == current_user.id %>
+					<%= link_to comment_path(comment), method: :delete, :class=>"", remote: true, confirm: "Are you sure you want to delete this comment?" do %>
+						<i class="fa fa-trash-o fa-danger"></i>
+					<% end %>
+				<% end %>
+			</div>
+		</div>
+	</div>
+		
+	<div><%= comment.body %></div>
+	
+</div>

@@ -1,0 +1,11 @@
+<div class="comment-form">
+  <%= simple_form_for comment, :url=>comments_path, :method=>'post', :remote => true, :class=>"form-horizontal form-table margin-bottom-0" do |f| %>
+    <%= f.input :body, :input_html => { :rows => "2" }, :label => false, required: true %>
+    <%= f.input :commentable_id, :as => :hidden, :value => comment.commentable_id %>
+    <%= f.input :commentable_type, :as => :hidden, :value => comment.commentable_type %>
+
+		<div class="row-fluid margin-top-10-neg">
+    	<%= f.button :submit, :class => "btn btn-success pull-right", :id=>"comment_submit_btn" %>
+		</div>
+  <% end %>
+</div>

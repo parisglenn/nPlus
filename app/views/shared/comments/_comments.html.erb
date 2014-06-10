@@ -1,0 +1,11 @@
+<div class="span12 info-block">
+	<div class="info-block-header">
+		Comments
+		<span class="badge pull-right"><%= @comments.count %></span>
+	</div>
+
+	<div class="info-block-body">
+		<%= render :partial => "shared/comments/form", :locals => {:comment => @new_comment} %>
+		<%= render :partial => "shared/comments/comment", :collection => @comments, as: :comment %>
+	</div>
+</div>
