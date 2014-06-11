@@ -2,6 +2,7 @@ class Geo < ActiveRecord::Base
 	has_many :events
 	belongs_to :subscription
 	has_many :user_geos
+	has_many :users
   attr_accessible :name, :location_type, :parent_zone, :parent_country, :parent_region, :parent_city
   default_scope order: 'geos.location_type DESC'
   validates :name, uniqueness: true

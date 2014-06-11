@@ -5,6 +5,8 @@ class Event < ActiveRecord::Base
   attr_accessible :end_time, :event_date, :location, :name, :start_time, :geo, :description
   accepts_nested_attributes_for :event_tags
 
+  acts_as_commentable
+
   def status=(status)
     @status = status
   end

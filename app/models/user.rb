@@ -8,12 +8,13 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, 
   :first_name, :last_name, :admin, :event_notification_frequency, :round_up_notification_frequency,
   :team_id, :office_id
-  belongs_to :office
+  #belongs_to :geo, foreign_key: :office_id
+  belongs_to :office, class_name: 'Geo', foreign_key: :office_id, primary_key: :id
   belongs_to :team
   has_many :rsvps
   has_many :subscriptions
   has_many :user_geos
-  accepts_nested_attributes_for :office, :team
+  accepts_nested_attributes_for :team, :office#, :geo
   attr_accessible :email, :full_name, :password, :office, :team,
                   :login, 
                   :password, 

@@ -59,7 +59,7 @@ NPlus::Application.routes.draw do
   resources :rsvps
   put "rsvps/assign_host" => "rsvps#assign_host", as: "assign_host"
 
-
+  resources :comments, only: [:create, :destroy]
 
 
   # The priority is based upon order of creation:

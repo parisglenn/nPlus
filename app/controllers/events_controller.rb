@@ -19,6 +19,8 @@ class EventsController < ApplicationController
     #move the host logic to the event model
     hosts = Rsvp.where(event_id: @event.id).where(host: true)
     @host_ids = hosts.map { |h| h.user_id }
+    @comments = @event.comment_threads.order('created_at desc')
+    @new_comment = Comment.build_from(@event, current_user.id, "")
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @event }

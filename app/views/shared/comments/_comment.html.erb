@@ -1,6 +1,6 @@
 <div id="comment-<%= comment.id %>" class="comment">
 	<div class="row-fluid">
-		<div class="span6"><%= link_to(get_user(comment.user_id), user_path(comment.user.login), :class => 'entity-link') %></div>
+		<div class="span6"><%= link_to(get_user(comment.user_id), user_path(comment.user_id), :class => 'entity-link') %></div>
 		
 		<div class="span6">
 			<div class="pull-right">
