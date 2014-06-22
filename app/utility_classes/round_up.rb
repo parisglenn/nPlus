@@ -1,6 +1,11 @@
 class RoundUp
 	def initialize
-
+		@offices = Office.all
+		@round_up_times = RoundUpTime.all
+		@users = User.all
+		#@past_matches = RoundUpMatch.all #I don't think this table will have any useful info
+		@user_matches = RoundUpMatchUser.all
+		@user_availabilities = RoundUpUserAvailability.all
 	end
 
 end
@@ -12,7 +17,38 @@ class MatchUser
 	end
 end
 
+class MatchGroup
+	#by match time, by office
+	def initialize office_id, round_up_time_id
+		@office_id = office_id
+		@round_up_time_id = round_up_time_id
+		@date = get_date
+		@users = []
+	end
+end
+
+class generate_matches
+	def initialize
+		@round_up = RoundUp.new
+		@match_groups = get_match_groups
+	end
+
+	def get_match_groups
+		match_groups = []
+		@round_up.round_up_times.each do |rut|
+			@round_up.offices.each do |office|
+				match_groups << MatchGroup.new office.id, rut.id
+			end
+		end
+		match_groups
+	end
+end
+
 =begin
+create an object that has the match_time id, the date, the office, and an array for users
+create arrays for all round up times by office and time
+	
+
 build possible match objects based on time/office
 for each user - if not matched this week 
 	go through each round_up_time by office
