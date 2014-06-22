@@ -1,0 +1,47 @@
+<div class="row-fluid"></div>
+
+		<div class="row-fluid">
+			<ul class="nav nav-tabs">
+			  <li class="active">
+			  	<a href="#users" data-toggle="tab" class="">
+			  		<span>Users</span>
+			  	</a>
+			  </li>
+
+			  <li class="">
+			  	<a href="#interests" data-toggle="tab" class="">
+			  		<span>Interests</span>
+			  	</a>
+			  </li>
+
+			  <li class="">
+			  	<a href="#round_up_times" data-toggle="tab" class="">
+			  		<span>Round Up Times</span>
+			  	</a>
+			  </li> 
+			  <li class="">
+			  	<a href="#geos" data-toggle="tab" class="">
+			  		<span>Geos</span>
+			  	</a>
+			  </li> 
+			</ul>
+		</div>
+
+<div class="tab-content">
+
+				<div class="tab-pane fade in active" id="users">
+					<%= render 'users/index' %>
+				</div>
+          
+				<div class="tab-pane fade in active" id="interests">
+					<%= render 'interests/index' %>
+				</div>
+
+				<div class="tab-pane fade" id="round_up_times">
+					<%= render 'round_up_times/index' %>
+				</div>
+
+				<div class="tab-pane fade" id="geos">
+					<%= render 'geos/index' %>
+				</div>
+</div>

@@ -1,4 +1,7 @@
 NPlus::Application.routes.draw do
+  resources :feedbacks
+
+
   resources :round_up_times
 
   #get "my_round_up_times" => "round_up_times#account_round_up_times", :as => "account_round_up_times"

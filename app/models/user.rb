@@ -14,7 +14,9 @@ class User < ActiveRecord::Base
   has_many :rsvps
   has_many :subscriptions
   has_many :user_geos
+  has_many :round_up_matches, through: :round_up_match_users
   accepts_nested_attributes_for :team, :office#, :geo
+  has_many :feedbacks
   attr_accessible :email, :full_name, :password, :office, :team,
                   :login, 
                   :password, 
@@ -71,6 +73,10 @@ class User < ActiveRecord::Base
       event.status = :attending
     end
     @user_events
+  end
+
+  def name
+    first_name + " " + last_name
   end
 
 end
