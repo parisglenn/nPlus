@@ -1,3 +1,7 @@
+# TO DO
+# just get users who are participating and who are not already booked this week
+
+
 #array.sample will choose random element
 #get kv pair from has that has the lowest value
 
@@ -5,7 +9,7 @@ class RoundUp
 	def initialize
 		@offices = Office.all
 		@round_up_times = RoundUpTime.all
-		@users = User.all
+		@users = User.all #just users who are participating and who are not already booked this week
 		#@past_matches = RoundUpMatch.all #I don't think this table will have any useful info
 		@user_matches = RoundUpMatchUser.all
 		@user_availabilities = RoundUpUserAvailability.all
@@ -27,7 +31,7 @@ class BestPairings
 
 	def sort_array list, arg
 		#returns array sorted from largest to smallest - good for popping off the smallest
-		small_to_large = list.sort { |a,b| a.send(:arg) <=> b.send(:arg) } 
+		small_to_large = list.sort { |a,b| a.send(:arg) <=> b.send(:arg) } #what happens if i switch a/b - will that reverse sort?
 		small_to_large.reverse
 	end
 
