@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>User:</b>
+  <%= @user_office_hour.user.name %>
+</p>
+
+<p>
+  <b>Geo:</b>
+  <%= @user_office_hour.geo.name %>
+</p>
+
+<p>
+  <b>Day of week:</b>
+  <%= @user_office_hour.day_of_week %>
+</p>
+
+<p>
+  <b>Starts at:</b>
+  <%= f_time @user_office_hour.starts_at %>
+</p>
+
+<p>
+  <b>Ends at:</b>
+  <%= f_time @user_office_hour.ends_at %>
+</p>
+
+
+<%= link_to 'Edit', edit_user_office_hour_path(@user_office_hour) %> |
+<%= link_to 'Back', user_office_hours_path %>

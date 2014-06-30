@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140621150108) do
+ActiveRecord::Schema.define(:version => 20140630131307) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -61,14 +61,14 @@ ActiveRecord::Schema.define(:version => 20140621150108) do
 
   create_table "events", :force => true do |t|
     t.string   "name"
-    t.string   "start_time"
-    t.string   "end_time"
     t.string   "location"
     t.date     "event_date",  :limit => 255
     t.integer  "geo_id"
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
     t.text     "description"
+    t.time     "starts_at"
+    t.time     "ends_at"
   end
 
   add_index "events", ["geo_id"], :name => "index_events_on_geo_id"
@@ -95,6 +95,18 @@ ActiveRecord::Schema.define(:version => 20140621150108) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "office_hours", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "geo_id"
+    t.string   "day_of_week"
+    t.integer  "start_hour"
+    t.integer  "start_minute"
+    t.integer  "end_hour"
+    t.integer  "end_minute"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "offices", :force => true do |t|
@@ -178,6 +190,16 @@ ActiveRecord::Schema.define(:version => 20140621150108) do
     t.boolean  "subscribed"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "user_office_hours", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "geo_id"
+    t.string   "day_of_week"
+    t.time     "starts_at"
+    t.time     "ends_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "users", :force => true do |t|

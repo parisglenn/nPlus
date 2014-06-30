@@ -1,0 +1,31 @@
+<h1>Listing user_office_hours</h1>
+
+<table>
+  <tr>
+    <th>User</th>
+    <th>Geo</th>
+    <th>Day of week</th>
+    <th>Starts at</th>
+    <th>Ends at</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @user_office_hours.each do |user_office_hour| %>
+  <tr>
+    <td><%= user_office_hour.user_id %></td>
+    <td><%= user_office_hour.geo_id %></td>
+    <td><%= user_office_hour.day_of_week %></td>
+    <td><%= user_office_hour.starts_at %></td>
+    <td><%= user_office_hour.ends_at %></td>
+    <td><%= link_to 'Show', user_office_hour %></td>
+    <td><%= link_to 'Edit', edit_user_office_hour_path(user_office_hour) %></td>
+    <td><%= link_to 'Destroy', user_office_hour, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New User office hour', new_user_office_hour_path %>

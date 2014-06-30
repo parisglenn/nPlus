@@ -2,7 +2,7 @@ class Event < ActiveRecord::Base
   belongs_to :geo
   has_many :event_tags
   has_many :rsvps
-  attr_accessible :end_time, :event_date, :location, :name, :start_time, :geo, :description
+  attr_accessible :ends_at, :event_date, :location, :name, :starts_at, :geo, :description
   accepts_nested_attributes_for :event_tags
 
   acts_as_commentable

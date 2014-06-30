@@ -213,33 +213,142 @@
 #<RoundUpTime id: 1, day: "Monday", start_hour: 1500, end_hour: 1600, deprecated: false, created_at: "2014-05-23 12:58:27", updated_at: "2014-05-23 12:58:27">, 
 #<RoundUpTime id: 2, day: "Tuesday", start_hour: 1000, end_hour: 1100, deprecated: false, created_at: "2014-05-23 12:58:55", updated_at: "2014-05-23 12:58:55">] 
 
-RoundUpTime.create!({
-	day: "Monday",
-	start_hour: 1500,
-	end_hour: 1600,
-	deprecated: false
+# RoundUpTime.create!({
+# 	day: "Monday",
+# 	start_hour: 1500,
+# 	end_hour: 1600,
+# 	deprecated: false
+# 	})
+# RoundUpTime.create!({
+# 	day: "Tuesday",
+# 	start_hour: 1000,
+# 	end_hour: 1100,
+# 	deprecated: false
+# 	})
+# RoundUpTime.create!({
+# 	day: "Wednesday",
+# 	start_hour: 1200,
+# 	end_hour: 1300,
+# 	deprecated: false
+# 	})
+# RoundUpTime.create!({
+# 	day: "Thursday",
+# 	start_hour: 1400,
+# 	end_hour: 1500,
+# 	deprecated: false
+# 	})
+# RoundUpTime.create!({
+# 	day: "Friday",
+# 	start_hour: 1100,
+# 	end_hour: 1200,
+# 	deprecated: false
+# 	})
+
+u1=User.create!({
+	first_name: "user1",
+	email: "user1@nplus.com",
+	password: "password"
 	})
-RoundUpTime.create!({
-	day: "Tuesday",
-	start_hour: 1000,
-	end_hour: 1100,
-	deprecated: false
+
+u2=User.create!({
+	first_name: "user2",
+	email: "user2@nplus.com",
+	password: "password"
 	})
-RoundUpTime.create!({
-	day: "Wednesday",
-	start_hour: 1200,
-	end_hour: 1300,
-	deprecated: false
+
+u3=User.create!({
+	first_name: "user3",
+	email: "user3@nplus.com",
+	password: "password"
 	})
-RoundUpTime.create!({
-	day: "Thursday",
-	start_hour: 1400,
-	end_hour: 1500,
-	deprecated: false
+
+u4=User.create!({
+	first_name: "user4",
+	email: "user4@nplus.com",
+	password: "password"
 	})
-RoundUpTime.create!({
-	day: "Friday",
-	start_hour: 1100,
-	end_hour: 1200,
-	deprecated: false
+
+u5=User.create!({
+	first_name: "user5",
+	email: "user5@nplus.com",
+	password: "password"
 	})
+u6=User.create!({
+	first_name: "user6",
+	email: "user6@nplus.com",
+	password: "password"
+	})
+#Round up user availabilities
+#geos 53, 54, 55
+#round up time 3, 4, 5, 6, 7
+RoundUpUserAvailability.create!({
+	geo_id: 53,
+	round_up_time_id: 3,
+	user_id: u1.id
+	})
+RoundUpUserAvailability.create!({
+	geo_id: 53,
+	round_up_time_id: 3,
+	user_id: u2.id
+	})
+RoundUpUserAvailability.create!({
+	geo_id: 53,
+	round_up_time_id: 6,
+	user_id: u2.id
+	})
+RoundUpUserAvailability.create!({
+	geo_id: 53,
+	round_up_time_id: 3,
+	user_id: u3.id
+	})
+RoundUpUserAvailability.create!({
+	geo_id: 53,
+	round_up_time_id: 4,
+	user_id: u3.id
+	})
+RoundUpUserAvailability.create!({
+	geo_id: 53,
+	round_up_time_id: 5,
+	user_id: u3.id
+	})
+RoundUpUserAvailability.create!({
+	geo_id: 53,
+	round_up_time_id: 4,
+	user_id: u4.id
+	})
+RoundUpUserAvailability.create!({
+	geo_id: 53,
+	round_up_time_id: 5,
+	user_id: u4.id
+	})
+RoundUpUserAvailability.create!({
+	geo_id: 53,
+	round_up_time_id: 6,
+	user_id: u4.id
+	})
+RoundUpUserAvailability.create!({
+	geo_id: 53,
+	round_up_time_id: 7,
+	user_id: u4.id
+	})
+RoundUpUserAvailability.create!({
+	geo_id: 53,
+	round_up_time_id: 5,
+	user_id: u5.id
+	})
+=begin
+
+test plan
+	user1 - 1 total availabilities (monday)
+	user2 - 2 total availabilities (monday, thursday)
+	user3 - 3 total availabilities (monday, tuesday, wednesday)
+
+	user4 - 4 total availabilities (tuesday, wednesday, thursday, friday)
+	user5 - 1 total availability (wednesday)
+	user 6 - 1 availabiltity (monday - other office)
+
+user1 should get matched wth user2 (but not three has lots of total availabilities)
+
+
+=end
+#test running the algo with existing and past matches existing as well

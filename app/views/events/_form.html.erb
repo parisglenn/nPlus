@@ -20,12 +20,12 @@
     <%= f.text_area :description, :required => true%>
   </div>
   <div class="field">
-    <%= f.label :start_time %><br />
-    <%= f.select :start_time, options_for_select(generate_time_dropdown, @event.start_time) %>
+    <%= f.label :starts_at%><br />
+    <%= f.time_select :starts_at, minute_step: 5, default: {:hour => '12', :minute => '30'}, ampm: true, required: true %> 
   </div>
   <div class="field">
-    <%= f.label :end_time %><br />
-    <%= f.select :end_time, options_for_select(generate_time_dropdown, @event.end_time) %>
+    <%= f.label :ends_at%><br />
+    <%= f.time_select :ends_at, minute_step: 5, default: {:hour => '13', :minute => '30'}, ampm: true, required: true %> 
   </div>
   <div class="field">
     <%= f.label :location %><br />

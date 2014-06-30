@@ -6,7 +6,7 @@
       
       <div class="span10">
           <strong>Event </strong> <%=link_to event.name, event_path(event)%> </br>
-          <strong>Date </strong> <%=event.event_date%> <strong> Start Time </strong> <%=ft event.start_time%> <strong> End Time </strong> <%= ft event.end_time%> </br>
+          <strong>Date </strong> <%=event.event_date%> <strong> Start Time </strong> <%=f_time event.starts_at%> <strong> End Time </strong> <%= f_time event.ends_at%> </br>
           <strong>Location</strong> <%=event.location%> </br>
           <strong>Description </strong> <%=event.description%> </br>
           <strong>Type of Event </strong>  <% ets = "| "; event.event_tags.each { |et| ets += et.interest.name + " | "} %> <%= ets %> </br>

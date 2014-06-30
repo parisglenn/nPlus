@@ -3,6 +3,7 @@ class Geo < ActiveRecord::Base
 	belongs_to :subscription
 	has_many :user_geos
 	has_many :users
+	has_many :user_office_hours
   attr_accessible :name, :location_type, :parent_zone, :parent_country, :parent_region, :parent_city
   default_scope order: 'geos.location_type DESC'
   validates :name, uniqueness: true

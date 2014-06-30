@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
   belongs_to :office, class_name: 'Geo', foreign_key: :office_id, primary_key: :id
   belongs_to :team
   has_many :rsvps
+  has_many :user_office_hours
   has_many :subscriptions
   has_many :user_geos
   has_many :round_up_matches, through: :round_up_match_users

@@ -69,7 +69,7 @@ module ApplicationHelper
 		[['Immediately','immediately'],['Daily','daily'],['Weekly','Weekly'],['Never','never']]
 	end
 
-	#format time
+	#format time - deprecating
 	def ft hm
 		minute = hm[-2..-1]
 		hour = hm[0...-2]
@@ -79,6 +79,17 @@ module ApplicationHelper
 			hour=(hour.to_i - 12).to_s
 		end
 		hour+':'+minute+' '+hemiday
+	end
+
+	def f_time full_time
+		minute = full_time.min
+		hour = full_time.hour
+		hemiday = "am"
+		if hour.to_i > 12
+			hemiday = "pm"
+			hour=(hour.to_i - 12).to_s
+		end
+		hour.to_s+':'+minute.to_s+' '+hemiday
 	end
 
 	#make a round_up_time into a string that is html form friendly
