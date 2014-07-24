@@ -14,10 +14,6 @@ class UserOfficeHoursController < ApplicationController
   # GET /user_office_hours/1.json
   def show
     @user_office_hour = UserOfficeHour.find(params[:id])
-    puts "office hour info !!!!!!!!!!!!!!!!!"
-    puts @user_office_hour.starts_at.class.name
-    puts @user_office_hour.starts_at.inspect
-    puts @user_office_hour.starts_at.min
 
     respond_to do |format|
       format.html # show.html.erb

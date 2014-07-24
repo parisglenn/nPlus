@@ -4,6 +4,7 @@ class Geo < ActiveRecord::Base
 	has_many :user_geos
 	has_many :users
 	has_many :user_office_hours
+	has_many :round_up_user_availabilities
   attr_accessible :name, :location_type, :parent_zone, :parent_country, :parent_region, :parent_city
   default_scope order: 'geos.location_type DESC'
   validates :name, uniqueness: true

@@ -336,6 +336,11 @@ RoundUpUserAvailability.create!({
 	round_up_time_id: 5,
 	user_id: u5.id
 	})
+RoundUpUserAvailability.create!({
+	geo_id: 54,
+	round_up_time_id: 5,
+	user_id: u6.id
+	})
 =begin
 
 test plan

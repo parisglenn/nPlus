@@ -6,17 +6,19 @@
 #get kv pair from has that has the lowest value
 
 class GenerateMatches
+	attr_accessor :round_up, :match_groups, :pair_expiration_date, :meeting_dates, :best_pairing
 	def initialize
 		@round_up = RoundUp.new
 		@match_groups = get_match_groups
+
 		@pair_expiration_date = Time.now + 1.days
 		@meeting_dates = get_meeting_dates
 		group_users #put users in match_groups
 		find_previous_matches #all matchUsers have an array of users they've met with
 		potential_user_matches #each users availability has a list of all user ids it could match with
-		best_pairing = get_best_pairing
-		commit_pairs_to_db best_pairing
-		#working on pair_users - sort them by total_possible_matches
+		@best_pairing = get_best_pairing
+		# commit_pairs_to_db @best_pairing
+		# #working on pair_users - sort them by total_possible_matches
 	end
 
 	def commit_pairs_to_db best_pairing
@@ -27,8 +29,8 @@ class GenerateMatches
 		end
 	end
 
-	def get_meeting_dates avail_id
-		today_wday = Today.now.wday
+	def get_meeting_dates
+		today_wday = Time.now.wday
 		meeting_dates = {}
 		@round_up.round_up_times.each do |rut|
 			meeting_dates[rut.id] = get_next_date rut, today_wday
@@ -59,7 +61,7 @@ class GenerateMatches
 		else
 			add_days = rut_wday - today_wday
 		end
-		Time.now + add_day.days # incorporate rut.start_hour 
+		Time.now + add_days.days # incorporate rut.start_hour 
 	end
 
 	def get_best_pairing
@@ -89,7 +91,7 @@ class GenerateMatches
 		match_groups = []
 		@round_up.round_up_times.each do |rut|
 			@round_up.offices.each do |office|
-				match_groups << MatchGroup.new office.id, rut.id
+				match_groups << MatchGroup.new(office.id, rut.id)
 			end
 		end
 		match_groups
@@ -153,18 +155,24 @@ class GenerateMatches
 end
 
 class RoundUp
+	attr_accessor :offices, :round_up_times, :users, :user_matches, :user_availabilities
 	def initialize
 		@offices = Office.all
 		@round_up_times = RoundUpTime.all
-		@users = User.all #just users who are participating and who are not already booked this week
+		@users = get_match_users #just users who are participating and who are not already booked this week
 		#@past_matches = RoundUpMatch.all #I don't think this table will have any useful info
 		@user_matches = RoundUpMatchUser.all
 		@user_availabilities = RoundUpUserAvailability.all
 	end
 
+	def get_match_users
+		users = User.all
+		users.map { |user| MatchUser.new user }
+	end
 end
 
 class BestPairings
+	attr_accessor :round_up, :match_groups, :random, :unmatched_users, :matched_users, :pairings
 	def initialize round_up, match_groups, random
 		@round_up = round_up
 		@match_groups = match_groups
@@ -178,13 +186,13 @@ class BestPairings
 
 	def sort_array list, arg
 		#returns array sorted from largest to smallest - good for popping off the smallest
-		small_to_large = list.sort { |a,b| a.send(:arg) <=> b.send(:arg) } #what happens if i switch a/b - will that reverse sort?
+		small_to_large = list.sort { |a,b| a.send(arg) <=> b.send(arg) } #what happens if i switch a/b - will that reverse sort?
 		small_to_large.reverse
 	end
 
 	def get_matched_users
 		#get saturday's date
-		add_days = 6 - Today.now.wday
+		add_days = 6 - Time.now.wday
 		rums = RoundUpMatch.where("date > #{Date.today}").where("date < #{Date.today + add_days.days}")
 		rum_ids = rums.map{ |r| r.id }
 		users = RoundUpMatchUser.where round_up_match_id: rum_ids
@@ -208,6 +216,7 @@ class BestPairings
 				else
 					least_available_users = sort_array value, :total_possible_matches
 					least_available_user = least_available_users.pop
+				end
 				if not @matched_users.include? user and not @matched_users.include? least_available_user
 					@pairings[[user, least_available_user]] = key 
 					@matched_users << user
@@ -221,6 +230,7 @@ class BestPairings
 end
 
 class MatchUser
+	attr_accessor :db_user, :id, :matched_this_week, :availabilities, :previous_matches, :smallest_availability, :total_possible_matches
 	def initialize user
 		@db_user = user
 		@id = user.id
@@ -247,10 +257,11 @@ class MatchUser
 end
 
 class MatchGroup
+	attr_accessor :office_id, :round_up_time_id, :date, :users
 	def initialize office_id, round_up_time_id
 		@office_id = office_id
 		@round_up_time_id = round_up_time_id
-		@date = get_date
+		#@date = get_date
 		@users = []
 	end
 end

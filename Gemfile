@@ -13,7 +13,18 @@ group :development, :test do
 	gem 'sqlite3'
 	gem 'better_errors'
 	gem 'binding_of_caller'
-  gem 'pry'
+  gem 'rspec-rails', '~>2.14.0'
+  gem 'guard-rspec', require: false
+  gem 'pry', '~> 0.9.12.6'
+  gem 'hirb', '~> 0.7.1'
+  gem 'database_cleaner'
+  # gem 'capybara'
+  # gem 'capybara-webkit'
+end
+
+group :test do
+  gem 'shoulda-matchers', require: false
+  gem 'faker'
 end
 
 # Gems used only for assets and not required
