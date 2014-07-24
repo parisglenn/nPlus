@@ -1,6 +1,6 @@
 # TO DO
 # figure out what date the meeting is (include the hour from the rut as well - full date time)
-
+# this is taylor
 
 #array.sample will choose random element
 #get kv pair from has that has the lowest value
