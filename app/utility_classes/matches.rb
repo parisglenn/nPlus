@@ -53,30 +53,85 @@ class RoundUp # have one class query the database - have another class generate 
 	attr_accessor :db, :match_availabilities, :today, :results
 	def initialize
 		@results = []
+		@match_availabilities = []
 		@today = Time.now
 		@db = QueryDatabase.new
 		@db.query_db
 		get_match_availabilities
 		@db.users.each do |u|
 			u.set_past_matches @db.past_matches
+			u.set_round_up_times @db.user_availabilities, @db.round_up_times
 		end	
+		get_user_availabilities
+		#everything above this line will be run once - then do several generate matches
 	end
 
 	def run
-		#everything above this line will be run once - then do several generate matches
+		
 		#so maybe everything above in the run method for now should actually be in initialize
-		(0..1).each do |result| #this isn't correct
+		(1..1).each do |result|
+			@gm = GenerateMatches.new self
+			@results << @gm
+			@gm.pair_users
+		end
+	end
 
+	def get_user_availabilities
+		@db.users.each do |u|
+			@match_availabilities.each do |ma|
+				if u.round_up_time_ids.include? ma.round_up_time.id
+					ma.users << u
+					u.availabilities << ma
+				end
+			end
 		end
 	end
 
 	def get_match_availabilities
-		@match_availabilities = []
 		@db.offices.each do |office|
 			@db.round_up_times.each |rut| do
 				@match_availabilities << MatchAvailabilities.new rut, office, @today
 			end
 		end
+	end
+end
+
+class GenerateMatches
+	attr_accessor :round_up, :pairs
+	def initialize round_up
+		@round_up = round_up
+		@pairs = []
+	end
+
+	def pair_users
+		@sorted_users = sort_array @round_up.db.users, :total_possible_matches
+		while @sorted_users.count > 1
+			u = @sorted_users.pop
+			sorted_avails = sort_array u.availabilities, :matched_users_count
+			while sorted_avails.count > 0 and not u.matched?
+				avail = sorted_avails.pop
+				sorted_users = sort_array avail.users, :total_possible_matches
+				while sorted_users.count > 0 and not u.matched?
+					pos_match = sorted_users.pop
+					if not pos_match.matched? and pos_match.db_user.id != u.db_user.id
+						MatchPair.new pos_match, u, avail
+					end
+				end
+			end
+		end
+	end
+
+	def sort_array list, arg #large_to_small
+		#returns array sorted from largest to smallest - good for popping off the smallest
+		small_to_large = list.sort { |a,b| a.send(arg) <=> b.send(arg) } #what happens if i switch a/b - will that reverse sort?
+		small_to_large.reverse
+	end
+	end
+end
+
+class MatchPair
+	def initialize user1, user2, availability
+
 	end
 end
 
@@ -96,7 +151,8 @@ class QueryDatabase
 	end
 
 	def query_all_users
-		@users = User.all.map { |u| MatchUser.new u }
+		@users = User.includes(:round_up_user_availabilities).
+			joins(:round_up_user_availabilities).map { |u| MatchUser.new u }
 	end
 
 	def query_all_round_up_times
@@ -105,7 +161,6 @@ class QueryDatabase
 
 	def query_all_user_availabilities
 		@user_availabilities = RoundUpUserAvailabilty.all
-		#@user_availabilities = RoundUpUserAvailabilty.all.map { |ua| MatchUserAvailability.new ua }
 	end
 
 	def query_all_offices
@@ -119,17 +174,29 @@ class QueryDatabase
 end
 
 class MatchUser 
-	attr_accessor :db_user, :matched
+	attr_accessor :db_user, :matched, :round_up_time_ids, :availabilities, :past_matches
 	
 	def initialize user
 		@db_user = user
 		@matched = false
+		@round_up_time_ids = []
 		@availabilities = []
 		@past_matches = []
 	end
 
 	def matched?
 		matched
+	end
+
+	def total_possible_matches
+		count = 0
+		@availabilities.each do |a|
+			a.users.each do |u|
+				unless u.matched?
+					count += 1
+				end
+			end
+		end	
 	end
 
 	def set_past_matches all_past_matches
@@ -146,6 +213,11 @@ class MatchUser
 		end
 	end
 
+	def set_round_up_time_ids round_up_times
+		#user availabilities should be included in user object, test in console to be sure
+		@round_up_time_ids = @db_user.round_up_user_availabilities.
+			map { |ruua| ruua.round_up_time_id }
+	end
 end
 
 class MatchAvailability
