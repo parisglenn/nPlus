@@ -1,4 +1,4 @@
-<h1>Listing events</h1>
+<h3>All events</h3> <%= link_to 'Create new event', new_event_path %></br></br>
 
 <table>
   <tr>
@@ -8,26 +8,21 @@
     <th>Location</th>
     <th>Event date</th>
     <th>Geo</th>
-    <th></th>
-    <th></th>
-    <th></th>
   </tr>
 
 <% @events.each do |event| %>
   <tr>
-    <td><%= event.name %></td>
-    <td><%= ft event.start_time %></td>
-    <td><%= ft event.end_time %></td>
-    <td><%= event.location %></td>
-    <td><%= event.event_date %></td>
-    <td><%= event.geo.name %></td>
-    <td><%= link_to 'Show', event %></td>
+    <td style="padding: 10px;"><%= link_to event.name, event_path(event.id) %></td>
+    <td style="padding: 10px;"><%= f_time event.starts_at %></td>
+    <td style="padding: 10px;"><%= f_time event.ends_at %></td>
+    <td style="padding: 10px;"><%= event.location %></td>
+    <td style="padding: 10px;"><%= event.event_date %></td>
+    <td style="padding: 10px;"><%= event.geo.name %></td>
+    <!-- <td><%= link_to 'Show', event %></td>
     <td><%= link_to 'Edit', edit_event_path(event) %></td>
-    <td><%= link_to 'Destroy', event, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <td><%= link_to 'Destroy', event, method: :delete, data: { confirm: 'Are you sure?' } %></td> -->
   </tr>
 <% end %>
 </table>
 
 <br />
-
-<%= link_to 'New Event', new_event_path %>

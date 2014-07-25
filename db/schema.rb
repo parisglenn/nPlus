@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140630131307) do
+ActiveRecord::Schema.define(:version => 20140724175551) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -220,6 +220,7 @@ ActiveRecord::Schema.define(:version => 20140630131307) do
     t.string   "last_name"
     t.integer  "office_id"
     t.integer  "team_id"
+    t.text     "description"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

@@ -22,6 +22,11 @@
   </div>
 
   <div class="field">
+    <%= f.label :description %><br />
+    <%= f.text_area :description, rows: 4, cols: 10 %>
+  </div>
+
+  <div class="field">
     <%= f.label :team_id %><br />
     <%= f.select :team_id, options_for_select(generate_team_dropdown, @user.team_id) %>
   </div>
@@ -44,16 +49,12 @@
   <div>
     <%= @success_message %></br>
   </div>
-  <div class="actions btn">
-    <%= f.submit %>
-  </div>
+  <%= submit_tag "Update", class: 'btn btn-info' %>
 <% end %>
 
 <script>
 $(document).ready(function (){
-  console.log("entered function")
   $("#notification_frequency_form").on("ajax:success", function(e, data, status, xhr){
-    console.log("reloading info")
     $("#notification_frequencies").html(data)}
   )})
 </script>

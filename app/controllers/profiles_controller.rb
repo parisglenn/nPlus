@@ -5,6 +5,7 @@ class ProfilesController < ApplicationController
     get_user_geos
     get_account_subscriptions
     get_round_up_times
+    get_user_office_hours
     @user = User.find current_user.id
   end
 
@@ -175,5 +176,10 @@ class ProfilesController < ApplicationController
       @existing_user_geo_ids = []
       @user_geos.each { |s| @existing_user_geo_ids << s.geo_id }
       @geos = Geo.all
+    end
+
+    def get_user_office_hours
+      @user_office_hour = UserOfficeHour.new
+      @users_office_hours = UserOfficeHour.where user_id: current_user.id
     end
 end

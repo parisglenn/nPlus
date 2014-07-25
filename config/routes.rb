@@ -1,10 +1,6 @@
 NPlus::Application.routes.draw do
   resources :user_office_hours
 
-
-  resources :office_hours
-
-
   resources :feedbacks
 
 

@@ -19,6 +19,13 @@
 			  		<span>Round Up Times</span>
 			  	</a>
 			  </li> 
+
+			  <li class="">
+			  	<a href="#user_office_hours" data-toggle="tab" class="">
+			  		<span>Office Hours</span>
+			  	</a>
+			  </li> 
+
 			  <li class="">
 			  	<a href="#notification_frequencies" data-toggle="tab" class="">
 			  		<span>Info & Email Notifications</span>
@@ -46,6 +53,11 @@
 				<div class="tab-pane fade" id="account_round_up_times">
 					<%= render partial: 'round_up_times/account_round_up_times' %>
 				</div>
+
+				<div class="tab-pane fade" id="user_office_hours">
+					<%= render partial: 'user_office_hours/my_hours' %>
+				</div>
+
 				<div class="tab-pane fade" id="notification_frequencies">
 					<%= render partial: 'users/email_frequencies' %>
 				</div>

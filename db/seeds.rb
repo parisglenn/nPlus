@@ -137,30 +137,6 @@
 # 	location_type: "office",
 # 	parent_city: gcspb.id
 # 	})
-# gzsa=Geo.create!({
-# 	name: "South America",
-# 	location_type: "global_zone"
-# 	})
-# gcbr=Geo.create!({
-# 	name: "Brazil",
-# 	location_type: "country",
-# 	parent_zone: gzsa.id
-# 	})
-# grbr=Geo.create!({
-# 	name: "Brazil",
-# 	location_type: "region",
-# 	parent_country: gcbr.id
-# 	})
-# gcspb=Geo.create!({
-# 	name: "Sao Paulo",
-# 	location_type: "city",
-# 	parent_region: grbr.id
-# 	})
-# gospb=Geo.create!({
-# 	name: "Sao Paulo Office",
-# 	location_type: "office",
-# 	parent_city: gcspb.id
-# 	})
 # gzemea=Geo.create!({
 # 	name: "EMEA",
 # 	location_type: "global_zone"

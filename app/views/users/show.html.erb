@@ -25,6 +25,9 @@
   <%= @user.team.name %>
 </p>
 
-
+<%= render partial: 'user_office_hours/my_hours'%>
+</br></br>
+<% if current_user.id == @user.id %>
 <%= link_to 'Edit', edit_user_path(@user) %> |
+<% end %>
 <%= link_to 'Back', users_path %>

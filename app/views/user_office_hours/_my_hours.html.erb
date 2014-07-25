@@ -1,0 +1,33 @@
+<% if @users_office_hours.empty? %>
+	<%= render partial: 'user_office_hours/form'%>
+<% else %>
+	<h3>Office Hours</h3>
+
+	<table>
+	  <tr>
+	    <th>Office</th>
+	    <th>Day of week</th>
+	    <th>Starts at</th>
+	    <th>Ends at</th>
+	    <th></th>
+	    <th></th>
+	    <th></th>
+	  </tr>
+
+	<% @users_office_hours.each do |user_office_hour| %>
+	  <tr>
+	    <td style="padding: 10px;"><%= user_office_hour.geo.name %></td>
+	    <td style="padding: 10px;"><%= user_office_hour.day_of_week %></td>
+	    <td style="padding: 10px;"><%= f_time user_office_hour.starts_at %></td>
+	    <td style="padding: 10px;"><%= f_time user_office_hour.ends_at %></td>
+	    <td style="padding: 10px;"><%= link_to 'Show', user_office_hour %></td>
+	    <td style="padding: 10px;"><%= link_to 'Edit', edit_user_office_hour_path(user_office_hour) %></td>
+	    <td style="padding: 10px;"><%= link_to 'Destroy', user_office_hour, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+	  </tr>
+	<% end %>
+	</table>
+
+	<br />
+
+	<%= link_to 'Create another office hour', new_user_office_hour_path %>
+<% end %>

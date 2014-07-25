@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, 
   :first_name, :last_name, :admin, :event_notification_frequency, :round_up_notification_frequency,
-  :team_id, :office_id
+  :team_id, :office_id, :description
   #belongs_to :geo, foreign_key: :office_id
   belongs_to :office, class_name: 'Geo', foreign_key: :office_id, primary_key: :id
   belongs_to :team
@@ -78,7 +78,11 @@ class User < ActiveRecord::Base
   end
 
   def name
-    first_name + " " + last_name
+    if first_name and last_name
+      first_name + " " + last_name 
+    else
+      ""
+    end
   end
 
 end

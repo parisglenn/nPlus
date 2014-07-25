@@ -77,7 +77,7 @@ class UserOfficeHoursController < ApplicationController
     @user_office_hour.destroy
 
     respond_to do |format|
-      format.html { redirect_to user_office_hours_url }
+      format.html { redirect_to define_profile_path }
       format.json { head :no_content }
     end
   end

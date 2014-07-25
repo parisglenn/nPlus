@@ -10,7 +10,6 @@
       </ul>
     </div>
   <% end %>
-
   <div class="field">
     <%= f.label "Office" %><br />
     <%= f.select :geo_id, options_for_select(generate_office_dropdown, @user_office_hour.geo_id) %>
@@ -29,6 +28,6 @@
     <%= f.time_select :ends_at, minute_step: 5, default: {:hour => '13', :minute => '30'}, ampm: true  %>
   </div>
   <div class="actions">
-    <%= f.submit %>
+    <%= submit_tag "Update", class: 'btn btn-info' %>
   </div>
 <% end %>
