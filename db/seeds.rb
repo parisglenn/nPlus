@@ -330,6 +330,9 @@ test plan
 
 user1 should get matched wth user2 (but not three has lots of total availabilities)
 
+1 and 2 were matched - 4 and 5 were matched 
+6 can't match with anyone, so 3 was left out
+why was 5 matched with 4 and not 3?
 
 =end
 #test running the algo with existing and past matches existing as well
