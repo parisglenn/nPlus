@@ -47,7 +47,8 @@
 		#commit matches to DB	
 	#what class methods do I want?	
 
-
+#TO DO 7-30-14 - work on MatchUser current RSVPs - currenlty called set_declined_round_ups
+	#all users should have pending_matches, declined_matches, and if matched this week, just set as matched=true
 class RoundUp # have one class query the database - have another class generate matches - 
 		# this way i only have to set everything up once (query db - set past users) - 
 		# then user instances of another class to generate matches and I can see which is best
@@ -57,7 +58,7 @@ class RoundUp # have one class query the database - have another class generate 
 		@match_availabilities = []
 		@today = Time.now
 		@db = QueryDatabase.new
-		@db.query_db
+		@db.query_db @today
 		get_match_availabilities
 		@db.users.each do |u|
 			u.set_past_matches @db.past_matches
@@ -69,18 +70,18 @@ class RoundUp # have one class query the database - have another class generate 
 	end
 
 	def run
+		# take all unmatched users - get rid of their past matches and try to pair the remaining users
 		(1..1).each do |result|
-			puts "in loop"
 			@gm = GenerateMatches.new self
 			@results << @gm
 			@gm.pair_users
-			#@gm.commit_pairs #eventually uncomment
 		end 
-		#@gm.commit_pairs 
 	end
 
 	def select_best_matches #do this later
 		#pick which gm strategy produced the most matches
+
+		#@gm.commit_pairs #eventually uncomment
 	end
 
 	def get_user_availabilities
@@ -134,12 +135,12 @@ class GenerateMatches
 		while @sorted_users.count > 1
 			u = @sorted_users.pop
 			sorted_avails = sort_array u.get_match_availabilities, :matched_users_count
-			while sorted_avails.count > 0 and not u.matched?
+			while sorted_avails.count > 0 and not u.matched
 				avail = sorted_avails.pop
 				sorted_users = sort_array avail.get_users, :total_possible_matches
-				while sorted_users.count > 0 and not u.matched?
+				while sorted_users.count > 0 and not u.matched
 					pos_match = sorted_users.pop
-					if users_pair? u, pos_match
+					if users_pair? u, pos_match, avail
 						@pairs << MatchPair.new(pos_match, u, avail)
 						pos_match.matched = true
 						u.matched = true
@@ -149,10 +150,14 @@ class GenerateMatches
 		end
 	end
 
-	def users_pair? user1, user2 #add additional filters here
-		(	not user2.matched? and 
+	def users_pair? user1, user2, avail #add additional filters here
+		(	not user2.matched and 
+			not user1.matched and
 			user2.id != user1.id and
-			not user1.past_matches.include? user2.id
+			not user1.past_matches.include? user2.id and 
+			not user2.past_matches.include? user1.id and
+			not user1.declined_round_ups.include? avail.round_up_time.id and
+			not user1.declined_round_ups.include? avail.round_up_time.id
 		)
 	end
 
@@ -179,19 +184,23 @@ class QueryDatabase
 	def initialize
 	end
 
-	def query_db
+	def query_db today
 		# pull from the DB tables that may be used by multiple classes
 		query_all_users
 		query_all_user_availabilities
 		query_all_round_up_times
 		query_all_offices
 		query_all_past_matches
+		MatchUser.set_declined_round_ups today
 	end
 
 	def query_all_users
-		@users = User.includes(:round_up_user_availabilities).#, :round_up_matches).
-			joins(:round_up_user_availabilities).#, :round_up_matches).
-			map { |u| MatchUser.new u }
+		## TO DO - only select users who do not have pending or positive RSVPs
+		users = User.includes(:round_up_user_availabilities).#, :round_up_matches).
+			joins(:round_up_user_availabilities)#, :round_up_matches).
+		users	
+
+		@users = users.map { |u| MatchUser.new u }
 	end
 
 	def query_all_round_up_times
@@ -213,22 +222,51 @@ class QueryDatabase
 end
 
 class MatchUser 
-	attr_accessor :db_user, :matched, :round_up_time_ids, :availabilities, :past_matches, :id
+	attr_accessor :db_user, :matched, :round_up_time_ids, :availabilities, :past_matches, 
+	:id, :declined_round_ups
 	
 	@@all_users = []
+	@@all_declined_round_ups = {}
+	@@past_limit = nil
+
+	def self.set_declined_round_ups today #call this set current RSVPs
+		# {user_id => [rut_id1, rut_id2]}	
+		rut = RoundUpTime.new day: 'Sunday'
+		office = Geo.new name: 'place_holder'
+		ma = MatchAvailability.new rut, office, today
+		future_limit = ma.get_next_date rut, today.wday
+		@@past_limit = future_limit - 7.days
+		rums = RoundUpMatch.where("date < #{future_limit}").where("date > #{@@past_limit}")
+		rum_ids = rums.map(&:id)
+		rumus = RoundUpMatchUser.where(round_up_match_id: rum_ids).where(rsvp: 'declined')
+		rumus.each do |r|
+			if @@all_declined_round_ups[r.user_id]
+				@@all_declined_round_ups[r.user_id] << r.round_up_match_id
+			else
+				@@all_declined_round_ups[r.user_id] = [r.round_up_match_id]
+			end
+		end
+
+	end
 
 	def initialize user
 		@db_user = user
 		@id = user.id
-		@matched = false
+		@matched = matched?
 		@round_up_time_ids = []
 		@availabilities = []
 		@past_matches = []
 		@@all_users << self
+		@declined_round_ups = @@all_declined_round_ups[@id] || []
 	end
 
-	def matched?
-		matched
+	def matched?	
+		now = Time.now	
+		current_match = RoundUpMatchUser.find_by_sql("select * from round_up_users ruu
+			left join round_up_matches rum on ruu.round_up_match_id = rum.id 
+			where ruu.user_id = #{@id} and rum.date > #{@@past_limit} and ((rum.expires
+			< #{now} and ruu.rsvp != 'declined')or ruu.rsvp = 'atteding')")
+		#current_match = RoundUpMatchUser.find_by_sql("select * from round_up_users ruu left join round_up_matches rum on ruu.round_up_match_id = rum.id where ruu.user_id = #{@id} and rum.date > #{@@past_limit} and (rum.expires < #{now} or ruu.rsvp = 'atteding')")
 	end
 
 	def self.find id
@@ -243,7 +281,7 @@ class MatchUser
 		count = 0
 		get_match_availabilities.each do |a|
 			a.get_users.each do |u|
-				unless u.matched?
+				unless u.matched
 					count += 1
 				end
 			end
@@ -258,7 +296,7 @@ class MatchUser
 		my_matches = all_past_matches.select { |pm| 
 			pm.user_id == @db_user.id }.
 			map { |pm2| pm2.round_up_match_id } 
-			
+
 		#find users also assigned to that past match
 		@past_matches = all_past_matches.select { |pm|
 			(my_maches.include? pm.round_up_match_id and 
@@ -307,6 +345,8 @@ class MatchAvailability
 	end
 
 	def get_next_date rut, today_wday
+		# clean this up to use @round_up_time, not an argument for rut
+		# also pass in today, not today_wday - so i can use today at the bottom too
 		rut_wday = case rut.day
 		when "Sunday" 
 			0
@@ -329,7 +369,7 @@ class MatchAvailability
 		else
 			add_days = rut_wday - today_wday
 		end
-		Time.now + add_days.days # incorporate rut.start_hour 
+		Date.today + add_days.days # incorporate rut.start_hour 
 	end
 
 end
