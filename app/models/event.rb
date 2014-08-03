@@ -16,10 +16,8 @@ class Event < ActiveRecord::Base
   end
 
   def hosts_include? user
-    user_ids = self.rsvps.map do |rsvp|
-      rsvp.user_id
-    end
-    user_ids.include? user.id
+    host_ids = self.rsvps.select(&:host).map(&:user_id)
+    host_ids.include? user.id
   end
 
   def attending_users

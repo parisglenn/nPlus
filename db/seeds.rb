@@ -186,8 +186,8 @@
 # 	parent_city: gctk.id
 # 	})
 
-#<RoundUpTime id: 1, day: "Monday", start_hour: 1500, end_hour: 1600, deprecated: false, created_at: "2014-05-23 12:58:27", updated_at: "2014-05-23 12:58:27">, 
-#<RoundUpTime id: 2, day: "Tuesday", start_hour: 1000, end_hour: 1100, deprecated: false, created_at: "2014-05-23 12:58:55", updated_at: "2014-05-23 12:58:55">] 
+###<RoundUpTime id: 1, day: "Monday", start_hour: 1500, end_hour: 1600, deprecated: false, created_at: "2014-05-23 12:58:27", updated_at: "2014-05-23 12:58:27">, 
+###<RoundUpTime id: 2, day: "Tuesday", start_hour: 1000, end_hour: 1100, deprecated: false, created_at: "2014-05-23 12:58:55", updated_at: "2014-05-23 12:58:55">] 
 
 # RoundUpTime.create!({
 # 	day: "Monday",
@@ -220,103 +220,106 @@
 # 	deprecated: false
 # 	})
 
-u1=User.create!({
-	first_name: "user1",
-	email: "user1@nplus.com",
-	password: "password"
-	})
 
-u2=User.create!({
-	first_name: "user2",
-	email: "user2@nplus.com",
-	password: "password"
-	})
+###Round up testing
 
-u3=User.create!({
-	first_name: "user3",
-	email: "user3@nplus.com",
-	password: "password"
-	})
+# u1=User.create!({
+# 	first_name: "user1",
+# 	email: "user1@nplus.com",
+# 	password: "password"
+# 	})
 
-u4=User.create!({
-	first_name: "user4",
-	email: "user4@nplus.com",
-	password: "password"
-	})
+# u2=User.create!({
+# 	first_name: "user2",
+# 	email: "user2@nplus.com",
+# 	password: "password"
+# 	})
 
-u5=User.create!({
-	first_name: "user5",
-	email: "user5@nplus.com",
-	password: "password"
-	})
-u6=User.create!({
-	first_name: "user6",
-	email: "user6@nplus.com",
-	password: "password"
-	})
-#Round up user availabilities
-#geos 53, 54, 55
-#round up time 3, 4, 5, 6, 7
-RoundUpUserAvailability.create!({
-	geo_id: 53,
-	round_up_time_id: 3,
-	user_id: u1.id
-	})
-RoundUpUserAvailability.create!({
-	geo_id: 53,
-	round_up_time_id: 3,
-	user_id: u2.id
-	})
-RoundUpUserAvailability.create!({
-	geo_id: 53,
-	round_up_time_id: 6,
-	user_id: u2.id
-	})
-RoundUpUserAvailability.create!({
-	geo_id: 53,
-	round_up_time_id: 3,
-	user_id: u3.id
-	})
-RoundUpUserAvailability.create!({
-	geo_id: 53,
-	round_up_time_id: 4,
-	user_id: u3.id
-	})
-RoundUpUserAvailability.create!({
-	geo_id: 53,
-	round_up_time_id: 5,
-	user_id: u3.id
-	})
-RoundUpUserAvailability.create!({
-	geo_id: 53,
-	round_up_time_id: 4,
-	user_id: u4.id
-	})
-RoundUpUserAvailability.create!({
-	geo_id: 53,
-	round_up_time_id: 5,
-	user_id: u4.id
-	})
-RoundUpUserAvailability.create!({
-	geo_id: 53,
-	round_up_time_id: 6,
-	user_id: u4.id
-	})
-RoundUpUserAvailability.create!({
-	geo_id: 53,
-	round_up_time_id: 7,
-	user_id: u4.id
-	})
-RoundUpUserAvailability.create!({
-	geo_id: 53,
-	round_up_time_id: 5,
-	user_id: u5.id
-	})
-RoundUpUserAvailability.create!({
-	geo_id: 54,
-	round_up_time_id: 5,
-	user_id: u6.id
-	})
+# u3=User.create!({
+# 	first_name: "user3",
+# 	email: "user3@nplus.com",
+# 	password: "password"
+# 	})
+
+# u4=User.create!({
+# 	first_name: "user4",
+# 	email: "user4@nplus.com",
+# 	password: "password"
+# 	})
+
+# u5=User.create!({
+# 	first_name: "user5",
+# 	email: "user5@nplus.com",
+# 	password: "password"
+# 	})
+# u6=User.create!({
+# 	first_name: "user6",
+# 	email: "user6@nplus.com",
+# 	password: "password"
+# 	})
+# #Round up user availabilities
+# #geos 53, 54, 55
+# #round up time 3, 4, 5, 6, 7
+# RoundUpUserAvailability.create!({
+# 	geo_id: 53,
+# 	round_up_time_id: 3,
+# 	user_id: u1.id
+# 	})
+# RoundUpUserAvailability.create!({
+# 	geo_id: 53,
+# 	round_up_time_id: 3,
+# 	user_id: u2.id
+# 	})
+# RoundUpUserAvailability.create!({
+# 	geo_id: 53,
+# 	round_up_time_id: 6,
+# 	user_id: u2.id
+# 	})
+# RoundUpUserAvailability.create!({
+# 	geo_id: 53,
+# 	round_up_time_id: 3,
+# 	user_id: u3.id
+# 	})
+# RoundUpUserAvailability.create!({
+# 	geo_id: 53,
+# 	round_up_time_id: 4,
+# 	user_id: u3.id
+# 	})
+# RoundUpUserAvailability.create!({
+# 	geo_id: 53,
+# 	round_up_time_id: 5,
+# 	user_id: u3.id
+# 	})
+# RoundUpUserAvailability.create!({
+# 	geo_id: 53,
+# 	round_up_time_id: 4,
+# 	user_id: u4.id
+# 	})
+# RoundUpUserAvailability.create!({
+# 	geo_id: 53,
+# 	round_up_time_id: 5,
+# 	user_id: u4.id
+# 	})
+# RoundUpUserAvailability.create!({
+# 	geo_id: 53,
+# 	round_up_time_id: 6,
+# 	user_id: u4.id
+# 	})
+# RoundUpUserAvailability.create!({
+# 	geo_id: 53,
+# 	round_up_time_id: 7,
+# 	user_id: u4.id
+# 	})
+# RoundUpUserAvailability.create!({
+# 	geo_id: 53,
+# 	round_up_time_id: 5,
+# 	user_id: u5.id
+# 	})
+# RoundUpUserAvailability.create!({
+# 	geo_id: 54,
+# 	round_up_time_id: 5,
+# 	user_id: u6.id
+# 	})
 =begin
 
 test plan
@@ -330,6 +333,27 @@ test plan
 
 user1 should get matched wth user2 (but not three has lots of total availabilities)
 
+1 and 2 were matched - 4 and 5 were matched 
+6 can't match with anyone, so 3 was left out
+why was 5 matched with 4 and not 3?
 
 =end
 #test running the algo with existing and past matches existing as well
+
+#rum = RoundUpMatch.create({date: pair.availability.date, expires: @today + 1.days, round_up_time_id: pair.availability.round_up_time.id}) #:date, :expires, :location, :round_up_time_id
+
+rum = RoundUpMatch.create!({
+	round_up_time_id: 3,
+	date: Date.today + 2.days,
+	expires: 1.days.from_now
+	})
+
+RoundUpMatchUser.create!({
+	round_up_match_id: rum.id,
+	user_id: 1
+	})
+
+RoundUpMatchUser.create!({
+	round_up_match_id: rum.id,
+	user_id: 2
+	})

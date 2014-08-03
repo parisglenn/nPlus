@@ -17,11 +17,8 @@ class EventsController < ApplicationController
     @event_tags = EventTag.where event_id: @event.id
     @attending_users = @event.attending_users
     #move the host logic to the event model
-    puts "event info !!!!!!!!!!!!!!!!!"
-    puts @event.starts_at.class.name
-    puts @event.starts_at.min
     hosts = Rsvp.where(event_id: @event.id).where(host: true)
-    @host_ids = hosts.map { |h| h.user_id }
+    @host_ids = hosts.map(&:user_id)
     @comments = @event.comment_threads.order('created_at desc')
     @new_comment = Comment.build_from(@event, current_user.id, "")
     respond_to do |format|

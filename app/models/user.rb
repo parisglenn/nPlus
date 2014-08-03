@@ -81,7 +81,7 @@ class User < ActiveRecord::Base
     if first_name and last_name
       first_name + " " + last_name 
     else
-      ""
+      email.split('@')[0]
     end
   end
 

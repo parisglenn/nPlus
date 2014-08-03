@@ -1,0 +1,40 @@
+<% status_messages = get_status_messages %> 
+<%= form_for(@round_up_match) do |f| %>
+  <% if @round_up_match.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@round_up_match.errors.count, "error") %> prohibited this round_up_match from being saved:</h2>
+
+      <ul>
+      <% @round_up_match.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <strong>Who </strong> <%=link_to @user1.user.name, user_path(@user1.user.id)%> (<%=@user1.rsvp || 'yet to RSVP'%>) and <%=link_to @user2.user.name, user_path(@user2.user.id)%> (<%=@user2.rsvp || 'yet to RSVP' %>)</br>
+  <strong>When </strong> <%=@round_up_match.date%> <strong> at </strong> <%= f_time @round_up_match.round_up_time.start_hour%> </br>
+  <strong>RSVP before</strong> <%=@round_up_match.expires%></br>
+  <strong>Office</strong> <%=@round_up_match.geo.name%></br></br>
+
+    <div class="field">
+    <label for="round_up_match_location" style="display:inline;"><strong>Location</strong></label>
+    <%= f.text_field :location  %>
+  </div>
+  <div class="actions">
+    <%= submit_tag "Update", class: 'btn btn-info' %>
+  </div>
+<% end %>
+
+<script>
+$(document).ready(function (){
+  $(".round_up_rsvp_form").on("ajax:success", function(e, data, status, xhr){
+    $("#account_round_up_times").html(data)}
+  )})
+</script>
+
+<!-- (<%#=status_messages[RoundUpMatchUser.get_rsvp(@user1.id, @round_up_match.id)]%>) -->
+
+<!--   <div class="field">
+    <%#= f.check_box_tag('Allow others to join', 1, @round_up_match_user.open) %>
+  </div> -->

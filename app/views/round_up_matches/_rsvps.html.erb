@@ -1,0 +1,10 @@
+<% buttons=get_rsvp_buttons %>
+<% @round_up_match_user = (@user1.user.id == current_user.id ? @user1 : @user2 ) %>
+<% if @round_up_match_user.rsvp.blank? %>
+	<% ['attending','declined'].each do |action| %>
+		<%= form_for(@round_up_match_user, html: {class: 'round_up_rsvp_form'}) do |f| %>
+		  <input type="hidden" name="round_up_match_user[rsvp]" id="rsvp_#{@round_up_match_user.id}" value="<%=action%>">
+		  <input class="rsvp-button btn" name="commit" type="submit" value="<%=buttons[action.to_sym]%>">
+		<% end %>
+	<% end %>
+<% end %>

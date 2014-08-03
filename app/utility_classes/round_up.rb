@@ -1,44 +1,354 @@
-# TO DO
-# figure out what date the meeting is (include the hour from the rut as well - full date time)
-# this is taylor
+#glossary
+	# round up time = the time of week the user has selected as being available every week
+	# availability = a particular time in the (coming) week that the user is available
+		# availabilities contain lists of users that can be matched during that time
 
-#array.sample will choose random element
-#get kv pair from has that has the lowest value
+		#get all office geos
+		#create matchAvailabilities
+			# will have round up time id - this is how users will match to it
+			#i need office geos as well
+	# rsvp status -- currently using 'attending' in MatchUser#get_past_matches
+#generate_matches
+	#have an attribute that tracks if i've tried to match all new pairs - then try to match people again
+	#procedure
+		# instantiate blank object
+		# get all users - 
+		# set all users - class method in matchUser class and matchAvailabilities class
+		# get all offices
+		# set all offices - class method under matchAvailabilities
+		# get all round up times - will be used to create match availabilities with offices
+		# set all round up times - in match availabilities class method 
+		# get all round up user availabilities
+		# set all round up user availabilities as set round up times in user class method
+		# create match availabities objects - by office/by time of week - using round up times
+			# as each one is created, add it to a class variable that is an array of all match availabilities
+			#function to count all unmatched users	
+		# get past matches
+		# create new user objects - 
+			# set past matches
+			# set their matchAvailabilities by using class method of user round up availabilities and all MatchAvailabilities
+				# add the user to the match availabitity as the match availabity is added to the user  ## duplicate note?: i probably want to put matchroundup times in users, then add the user to the round up time as i do that, then its all done in one swoop
+
+
+		#put users in availabilities
+			#for each availability, loop through each one, nested loop through each user and add as necissary
+			#have a function to get the count of how many unmatched users the availability has
+		#remove availabilities with 0 users
+		#put availabities in users
+			#just an array of new availabilities objects? - this will already have all the users
+			#have a function to get the count of total possible matches the user has across availabilities
+		#generate matches
+			#start with availability that has fewest users
+				#find unmatched user with fewest available matches
+				#match that user to unmatched user with fewest available matches that they haven't been matched with yet
+					#mark both users as matched
+					#generate new match object
+		#get dates for matches
+		#commit matches to DB	
+	#what class methods do I want?	
+
+#TO DO 7-30-14 - work on MatchUser current RSVPs - currenlty called set_declined_round_ups
+	#all users should have pending_matches, declined_matches, and if matched this week, just set as matched=true
+class RoundUp # have one class query the database - have another class generate matches - 
+		# this way i only have to set everything up once (query db - set past users) - 
+		# then user instances of another class to generate matches and I can see which is best
+	attr_accessor :db, :match_availabilities, :today, :results, :gm
+	def initialize
+		@results = []
+		@match_availabilities = []
+		@today = Time.now
+		@db = QueryDatabase.new
+		@db.query_db @today
+		get_match_availabilities
+		@db.users.each do |u|
+			u.set_past_matches @db.past_matches
+			u.set_round_up_time_ids @db.round_up_times
+		end	
+		get_user_availabilities
+		remove_empty_match_availabilities
+		return true
+	end
+
+	def run
+		# take all unmatched users - get rid of their past matches and try to pair the remaining users
+		(1..1).each do |result|
+			@gm = GenerateMatches.new self
+			@results << @gm
+			@gm.pair_users
+		end 
+	end
+
+	def select_best_matches #do this later
+		#pick which gm strategy produced the most matches
+
+		#commit_pairs @results[0].pairs #eventually uncomment
+	end
+
+	def get_user_availabilities
+		@db.users.each do |u|
+			u.db_user.round_up_user_availabilities.each do |ruaa|
+				@match_availabilities.each do |ma|
+					#binding.pry
+					if ruaa.round_up_time_id == ma.round_up_time.id and ruaa.geo_id == ma.office.id
+						ma.users << u.id
+						u.availabilities << ma.id#.round_up_time.id.to_s + "---" + ma.office.id.to_s
+					end
+				end
+			end
+		end
+		return true
+	end
+
+	def remove_empty_match_availabilities
+		@match_availabilities = @match_availabilities.select do |ma|
+			ma.users.count > 1
+		end
+	end
+
+	def get_match_availabilities
+		@db.offices.each do |office|
+			@db.round_up_times.each do |rut|
+				@match_availabilities << MatchAvailability.new(rut, office, @today)
+			end
+		end
+	end
+
+	def commit_pairs pairs
+		pairs.each do |pair|
+			rum = RoundUpMatch.create({date: pair.availability.date, expires: @today + 1.days, round_up_time_id: pair.availability.round_up_time.id, geo_id: pair.availability.office.id}) #:date, :expires, :location, :round_up_time_id
+			RoundUpMatchUser.create({user_id: pair.user1.id, round_up_match_id: rum.id}) #:open, :round_up_match_id, :rsvp, :user_id
+			RoundUpMatchUser.create({user_id: pair.user2.id, round_up_match_id: rum.id})
+		end
+	end
+end
 
 class GenerateMatches
-	attr_accessor :round_up, :match_groups, :pair_expiration_date, :meeting_dates, :best_pairing
+	attr_accessor :round_up, :pairs
+	def initialize round_up
+		@round_up = round_up
+		@pairs = []
+	end
+
+	def pair_users
+		# the loop ends ASAP as they stop when the user gets matched
+		@sorted_users = sort_array @round_up.db.users, :total_possible_matches
+		while @sorted_users.count > 1
+			u = @sorted_users.pop
+			sorted_avails = sort_array u.get_match_availabilities, :matched_users_count
+			while sorted_avails.count > 0 and not u.matched
+				avail = sorted_avails.pop
+				sorted_users = sort_array avail.get_users, :total_possible_matches
+				while sorted_users.count > 0 and not u.matched
+					pos_match = sorted_users.pop
+					if users_pair? u, pos_match, avail
+						@pairs << MatchPair.new(pos_match, u, avail)
+						pos_match.matched = true
+						u.matched = true
+					end
+				end
+			end
+		end
+	end
+
+	def users_pair? user1, user2, avail #add additional filters here
+		(	not user2.matched and 
+			not user1.matched and
+			user2.id != user1.id and
+			not user1.past_matches.include? user2.id and 
+			not user2.past_matches.include? user1.id and
+			not user1.declined_round_ups.include? avail.round_up_time.id and
+			not user1.declined_round_ups.include? avail.round_up_time.id
+		)
+	end
+
+	def sort_array list, arg #large_to_small
+		#returns array sorted from largest to smallest - good for popping off the smallest
+		small_to_large = list.sort { |a,b| a.send(arg) <=> b.send(arg) } #what happens if i switch a/b - will that reverse sort?
+		small_to_large.reverse
+	end
+
+end
+
+class MatchPair
+	attr_accessor :user1, :user2, :availability
+	def initialize user1, user2, availability
+		@user1 = user1
+		@user2 = user2
+		@availability = availability
+	end
+end
+
+class QueryDatabase
+	#maybe this class should just hold all the tables, and the class methods don't get assigned
+	attr_accessor :users, :round_up_times, :user_availabilities, :offices, :past_matches
 	def initialize
-		@round_up = RoundUp.new
-		@match_groups = get_match_groups
-
-		@pair_expiration_date = Time.now + 1.days
-		@meeting_dates = get_meeting_dates
-		group_users #put users in match_groups
-		find_previous_matches #all matchUsers have an array of users they've met with
-		potential_user_matches #each users availability has a list of all user ids it could match with
-		@best_pairing = get_best_pairing
-		# commit_pairs_to_db @best_pairing
-		# #working on pair_users - sort them by total_possible_matches
 	end
 
-	def commit_pairs_to_db best_pairing
-		best_pairing.each do |pair, avail|
-			rum = RoundUpMatch.new date: @meeting_date[avail.id], expires: @pair_expiration_date, round_up_time_id: avail.id
-			RoundUpMatchUser.new user_id: pair[0], round_up_match_id: rum.id
-			RoundUpMatchUser.new user_id: pair[1], round_up_match_id: rum.id
-		end
+	def query_db today
+		# pull from the DB tables that may be used by multiple classes
+		MatchUser.set_declined_round_ups today
+		query_all_users
+		query_all_user_availabilities
+		query_all_round_up_times
+		query_all_offices
+		query_all_past_matches
 	end
 
-	def get_meeting_dates
-		today_wday = Time.now.wday
-		meeting_dates = {}
-		@round_up.round_up_times.each do |rut|
-			meeting_dates[rut.id] = get_next_date rut, today_wday
+	def query_all_users
+		## TO DO - only select users who do not have pending or positive RSVPs
+		users = User.includes(:round_up_user_availabilities).#, :round_up_matches).
+			joins(:round_up_user_availabilities)#, :round_up_matches).
+		users	
+
+		@users = users.map { |u| MatchUser.new u }
+	end
+
+	def query_all_round_up_times
+		@round_up_times = RoundUpTime.all
+	end
+
+	def query_all_user_availabilities
+		@user_availabilities = RoundUpUserAvailability.all
+	end
+
+	def query_all_offices
+		@offices = Geo.where('parent_city is not null')
+	end
+
+	def query_all_past_matches
+		@past_matches = RoundUpMatchUser.all
+	end
+
+end
+
+class MatchUser 
+	attr_accessor :db_user, :matched, :round_up_time_ids, :availabilities, :past_matches, 
+	:id, :declined_round_ups
+	
+	@@all_users = []
+	@@all_declined_round_ups = {}
+	@@past_limit = nil
+
+	def self.set_declined_round_ups today #call this set current RSVPs
+		# {user_id => [rut_id1, rut_id2]}	
+		rut = RoundUpTime.new day: 'Sunday'
+		office = Geo.new name: 'place_holder'
+		ma = MatchAvailability.new rut, office, today
+		future_limit = ma.get_next_date rut, today.wday
+		@@past_limit = future_limit - 7.days
+		rums = RoundUpMatch.where("date < #{future_limit}").where("date > #{@@past_limit}")
+		rum_ids = rums.map(&:id)
+		rumus = RoundUpMatchUser.where(round_up_match_id: rum_ids).where(rsvp: 'declined')
+		rumus.each do |r|
+			if @@all_declined_round_ups[r.user_id]
+				@@all_declined_round_ups[r.user_id] << r.round_up_match_id
+			else
+				@@all_declined_round_ups[r.user_id] = [r.round_up_match_id]
+			end
 		end
-		meeting_dates
+
+	end
+
+	def initialize user
+		@db_user = user
+		@id = user.id
+		@matched = matched?
+		@round_up_time_ids = []
+		@availabilities = []
+		@past_matches = []
+		@@all_users << self
+		@declined_round_ups = @@all_declined_round_ups[@id] || []
+	end
+
+	def matched?	
+		now = Time.now	
+		current_match = RoundUpMatchUser.find_by_sql("select * from round_up_match_users ruu
+			left join round_up_matches rum on ruu.round_up_match_id = rum.id 
+			where ruu.user_id = #{@id} and rum.date > #{@@past_limit.strftime} and ((rum.expires
+			< #{now.strftime('%D')} and ruu.rsvp != 'declined') or ruu.rsvp = 'attending')")
+		#must include date time, not just date in now query
+		!current_match.empty?
+		#current_match = RoundUpMatchUser.find_by_sql("select * from round_up_users ruu left join round_up_matches rum on ruu.round_up_match_id = rum.id where ruu.user_id = #{@id} and rum.date > #{@@past_limit} and (rum.expires < #{now} or ruu.rsvp = 'atteding')")
+	end
+
+	def self.find id
+		@@all_users.detect { |u| u.id == id }
+	end
+
+	def get_match_availabilities
+		@availabilities.map { |a| MatchAvailability.find a }
+	end
+
+	def total_possible_matches
+		count = 0
+		get_match_availabilities.each do |a|
+			a.get_users.each do |u|
+				unless u.matched
+					count += 1
+				end
+			end
+		end	
+		count
+	end
+
+	def set_past_matches all_past_matches
+		#find all my past matches
+		#my_matches = db_user.round_up_matches.map { |rumu| rumu.id }
+		## Slower code below
+		my_matches = all_past_matches.select { |pm| 
+			pm.user_id == @db_user.id }.
+			map { |pm2| pm2.round_up_match_id } 
+
+		#find users also assigned to that past match
+		@past_matches = all_past_matches.select { |pm|
+			(my_matches.include? pm.round_up_match_id and 
+			pm.user_id != @db_user.id and 
+			pm.rsvp == 'attending')
+			}.
+			map { |pm2| pm2.user_id }
+	end
+
+	def set_round_up_time_ids round_up_times
+		#user availabilities should be included in user object, test in console to be sure
+		@round_up_time_ids = @db_user.round_up_user_availabilities.
+			map { |ruua| ruua.round_up_time_id }
+	end
+end
+
+class MatchAvailability
+	attr_accessor :round_up_time, :office, :users, :date, :id
+
+	@@all_match_availabilitiies = []
+	@@id = 0
+
+	def get_id
+		@@id += 1
+	end
+
+	def initialize round_up_time, office, today
+		@round_up_time = round_up_time
+		@office = office
+		@users = []
+		@date = get_next_date round_up_time, today.wday
+		@id = get_id
+		@@all_match_availabilitiies << self
+	end
+
+	def self.find id
+		@@all_match_availabilitiies.detect { |ma| ma.id == id }
+	end
+
+	def get_users
+		@users.map { |u| MatchUser.find u }
+	end
+
+	def matched_users_count
+		get_users.select{ |u| u.matched }.count
 	end
 
 	def get_next_date rut, today_wday
+		# clean this up to use @round_up_time, not an argument for rut
+		# also pass in today, not today_wday - so i can use today at the bottom too
 		rut_wday = case rut.day
 		when "Sunday" 
 			0
@@ -61,266 +371,72 @@ class GenerateMatches
 		else
 			add_days = rut_wday - today_wday
 		end
-		Time.now + add_days.days # incorporate rut.start_hour 
-	end
-
-	def get_best_pairing
-		count = 0
-		matched = false
-		random = false
-		best_pairing = [] 
-		while not matched and count < 10
-			if count > 0
-				random = true
-			end
-			bp = BestPairings.new @round_up, @match_groups, random
-			pairings = bp.pairings
-			if pairings.length == @round_up.users.length/2
-				best_pairing = pairings
-				matched = true
-				#just use break instead of matched flag?
-			elsif pairings.length > best_pairing.length
-				best_pairing = pairings
-			end
-			count += 1
-		end
-		best_pairing
-	end
-
-	def get_match_groups
-		match_groups = []
-		@round_up.round_up_times.each do |rut|
-			@round_up.offices.each do |office|
-				match_groups << MatchGroup.new(office.id, rut.id)
-			end
-		end
-		match_groups
-	end
-
-	def group_users
-		@round_up.users.each do |u|
-			user = MatchUser.new u
-			user_avails = get_user_avails user
-			user_avails.each do |ua|
-				@match_groups.each do |mg|
-					if mg.office_id == ua.geo_id and mg.round_up_time_id == ua.round_up_time_id
-						mg.users << user 
-						user.availabilities[mg] = []
-						break
-					end
-				end
-			end
-		end
-	end
-
-	def find_previous_matches
-		@round_up.users.each do |user|
-			user.get_previous_matches @round_up
-		end
-	end
-
-	def potential_user_matches
-		#double check all logic in method
-		@round_up.users.each do |user|
-			least_available = 9999999999 #a number that will always be higher than the first availability
-			user.availabilities.each do |k, v|
-				available = 0 
-				@round_up.users.each do |u|
-					u.availabilities.each do |mk, mv|
-						if not user.previous_matches.include? u.id and k.office_id == mk.office_id and k.round_up_time_id == mk.round_up_time_id
-							v << u.id
-							available += 1
-							user.total_possible_matches += 1
-
-							break
-						end
-					end
-				end
-				if available != 0 and available < least_available
-					user.smallest_availability = k
-				end
-			end
-		end
-	end
-
-	def get_user_avails user
-		user_avails = []
-		@round_up.user_availabilities.each do |avail|
-			if avail.user_id == user.id
-				user_avails << avail
-			end
-		end
-		user_avails
-	end
-end
-
-class RoundUp
-	attr_accessor :offices, :round_up_times, :users, :user_matches, :user_availabilities
-	def initialize
-		@offices = Office.all
-		@round_up_times = RoundUpTime.all
-		@users = get_match_users #just users who are participating and who are not already booked this week
-		#@past_matches = RoundUpMatch.all #I don't think this table will have any useful info
-		@user_matches = RoundUpMatchUser.all
-		@user_availabilities = RoundUpUserAvailability.all
-	end
-
-	def get_match_users
-		users = User.all
-		users.map { |user| MatchUser.new user }
-	end
-end
-
-class BestPairings
-	attr_accessor :round_up, :match_groups, :random, :unmatched_users, :matched_users, :pairings
-	def initialize round_up, match_groups, random
-		@round_up = round_up
-		@match_groups = match_groups
-		@random = random
-		@unmatched_users = sort_array @round_up.users, :total_possible_matches #ordered by least available users
-		@matched_users = get_matched_users #one dimensional array
-		@pairings = {} # or hash where value is availability, and key is array of two users
-		pair_users #add matches to priovious matches so that in the next loop i won't try to pair with them? - or just use randomness to find the best match
-
-	end
-
-	def sort_array list, arg
-		#returns array sorted from largest to smallest - good for popping off the smallest
-		small_to_large = list.sort { |a,b| a.send(arg) <=> b.send(arg) } #what happens if i switch a/b - will that reverse sort?
-		small_to_large.reverse
-	end
-
-	def get_matched_users
-		#get saturday's date
-		add_days = 6 - Time.now.wday
-		rums = RoundUpMatch.where("date > #{Date.today}").where("date < #{Date.today + add_days.days}")
-		rum_ids = rums.map{ |r| r.id }
-		users = RoundUpMatchUser.where round_up_match_id: rum_ids
-		user_ids = users.map{ |u| u.id }
-		User.where id: user_ids
-	end
-
-	def pair_users
-		#don't remove users from unmatched users - put them in matched users and check to make sure users arn't in matched users
-		while @unmatched_users.length > 1
-			user = @unmatched_users.pop
-			user.availabilities.each do |key, value|
-				if @random
-					random_choice_user = value.sample
-					if not @matched_users.include? user and not @matched_users.include? random_choice_user
-						@pairings << [user, random_choice_user]
-						@matched_users << user
-						@matched_users << random_choice_user
-						break
-					end					
-				else
-					least_available_users = sort_array value, :total_possible_matches
-					least_available_user = least_available_users.pop
-				end
-				if not @matched_users.include? user and not @matched_users.include? least_available_user
-					@pairings[[user, least_available_user]] = key 
-					@matched_users << user
-					@matched_users << least_available_user
-					break
-				end
-			end
-		end
+		Date.today + add_days.days # incorporate rut.start_hour 
 	end
 
 end
 
-class MatchUser
-	attr_accessor :db_user, :id, :matched_this_week, :availabilities, :previous_matches, :smallest_availability, :total_possible_matches
-	def initialize user
-		@db_user = user
-		@id = user.id
-		@matched_this_week = false
-		@availabilities = {}
-		@previous_matches = []
-		@smallest_availability = nil
-		@total_possible_matches = 0
-	end
 
-	def get_previous_matches round_up
-		match_events = []
-		round_up.user_matches.each do |um|
-			if um.user_id == self.id
-				match_events << um.id
-			end
-		end
-		round_up.user_matches.each do |um|
-			if match_events.include? um.id and um.user_id != self.id
-				self.previous_matches << um.user_id
-			end
-		end
-	end
-end
 
-class MatchGroup
-	attr_accessor :office_id, :round_up_time_id, :date, :users
-	def initialize office_id, round_up_time_id
-		@office_id = office_id
-		@round_up_time_id = round_up_time_id
-		#@date = get_date
-		@users = []
-	end
-end
+#get users
+#create new user object
+	#matched - true/false
+	#availabilities - set availabilities
+	#get_num_availabilities - counts how many availabilities are not matched - for each availabilitiy or for all availabilities
+	#previous matches - get previous matches - is it necissary to add current match to previous matches? probably not
 
 
 
-=begin
-create an object that has the match_time id, the date, the office, and an array for users
-for each user - for each group - figure out how many potential matches they have
-
-build possible match objects based on time/office
-for each user - if not matched this week 
-	go through each round_up_time by office
-		get the score for that user
-	the round_up_time with the lowest score (greater than 0)
-	for each user in that lowest scoring time/office
-		find the one with the fewest opportunities to match someone that week
+#what happens when a user is added as a potential match
 
 
+#what happens when a user is selected as a match
+	#it's matched value is set to true
 
-week
-	round_up_time_by_office
-		users
-			past meetings
-			find all possible people to match the user with (not in past meeting, and )
-			(the fewer possible matches, the higher priority matching that user should be)
+	### was in RoundUp class
+	# def set_class_variables
+	# 	# set class variables containing info from various tables
+	# 	MatchUser.set_all_users @gm.users
+	# 	MatchUser.set_all_user_availabilities @gm.user_availabilities
+	# 	MatchUser.set_all_past_matches
+	# 	MatchAvailability.set_all_offices
+	# 	MatchAvailability.set_all_round_up_times @gm.round_up_times
+	# end
 
+	### were in MatchUser
+	# def self.set_all_users users
+	# 	@@all_users = users
+	# end
 
-users
-	get all their round up times by office
+	# def self.all_users
+	# 	@@all_users
+	# end
 
+	# def self.set_all_round_up_times round_up_times
+	# 	@@round_up_times = round_up_times
+	# end
 
-get all round_up_times
-get dates for each round up time for this/coming week
+	# def self.round_up_times
+	# 	@@round_up_times
+	# end
 
-get all users
-get all round_up_user_availabilities
-for each  
+	# def self.set_all_past_matches
+	# 	all_past_matches = RoundUpMatch.all
+	# end
 
-#test plan
+	# def past_matches
+	# 	@@all_past_matches
+	# end 
 
-Monday
-	user1 - 1 total availabilities (monday)
-	user2 - 2 total availabilities (monday, thursday)
-	user3 - 3 total availabilities (monday, tuesday, wednesday)
+	### were in MatchAvailabilities
+	# def self.set_all_offices
+	# 	@@all_offices = Office.all
+	# end
 
-	user4 - 4 total availabilities (tuesday, wednesday, thursday, friday)
-	user5 - 1 total availability (wednesday)
+	# def self.all_offices
+	# 	@@all_offices
+	# end
 
-user1 should get matched wth user2 (but not three has lots of total availabilities)
-
-
-=end
-
-# class Pair
-# 	def initialize
-# 		@user_1
-# 		@user_2
-# 		@round_up_time_id
-# 		@date 
-# 	end
-# end
+#notes
+	#count how many objects in an array have a certain attribute set to true, like using select, but then counting that
+	#once I've tried to match everyone with someone new, try to match every left with someone

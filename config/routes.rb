@@ -3,6 +3,9 @@ NPlus::Application.routes.draw do
 
   resources :feedbacks
 
+  resources :round_up_matches, only: [:edit, :update]
+
+  resources :round_up_match_users, only: [:update]
 
   resources :round_up_times
 

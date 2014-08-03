@@ -82,14 +82,7 @@ module ApplicationHelper
 	end
 
 	def f_time full_time
-		minute = full_time.min
-		hour = full_time.hour
-		hemiday = "am"
-		if hour.to_i > 12
-			hemiday = "pm"
-			hour=(hour.to_i - 12).to_s
-		end
-		hour.to_s+':'+minute.to_s+' '+hemiday
+		full_time.strftime("%I:%M %p")
 	end
 
 	#make a round_up_time into a string that is html form friendly
