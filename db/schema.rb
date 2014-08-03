@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140724175551) do
+ActiveRecord::Schema.define(:version => 20140803211659) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -134,12 +134,13 @@ ActiveRecord::Schema.define(:version => 20140724175551) do
     t.datetime "expires"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.integer  "geo_id"
   end
 
   create_table "round_up_times", :force => true do |t|
     t.string   "day"
-    t.integer  "start_hour"
-    t.integer  "end_hour"
+    t.time     "start_hour"
+    t.time     "end_hour"
     t.boolean  "deprecated"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false

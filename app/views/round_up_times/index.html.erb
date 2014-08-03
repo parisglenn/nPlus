@@ -14,8 +14,8 @@
 <% @round_up_times.each do |round_up_time| %>
   <tr>
     <td><%= round_up_time.day %></td>
-    <td><%= round_up_time.start_hour %></td>
-    <td><%= round_up_time.end_hour %></td>
+    <td><%= f_time round_up_time.start_hour %></td>
+    <td><%= f_time round_up_time.end_hour %></td>
     <td><%= round_up_time.deprecated %></td>
     <td><%= link_to 'Show', round_up_time %></td>
     <td><%= link_to 'Edit', edit_round_up_time_path(round_up_time) %></td>

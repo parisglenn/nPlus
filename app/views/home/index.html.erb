@@ -1,15 +1,31 @@
-<h1>nPlus</h1>
+<h1>Cinder</h1>
 <% if current_user %>
-	<h3> Your upcoming events </h3>
-	<% @user_events.each do |event| %>
-		<%= render partial: "events/display_event", content_type: 'text/html', :locals => { event: event, actions: [:declined,:maybe], respond_with: "events"} %>
-		<!-- I think event might already be within the scope, so no need to pass in as local variable-->
-	<% end %>
+	<div class="row-fluid">
+  		<div class="span6" id="events">
+			<h3> Your upcoming events </h3>
+			<% @user_events.each do |event| %>
+				<%= render partial: "events/display_event", content_type: 'text/html', :locals => { event: event, actions: [:declined,:maybe], respond_with: "events"} %>
+				<!-- I think event might already be within the scope, so no need to pass in as local variable-->
+			<% end %>
 
-	<h3> Suggested events for you </h3>
-	<% @suggested_events.each do |event| %>
-		<%= render partial: "events/display_event", content_type: 'text/html', locals: { event: event, actions: [:attending,:maybe,:declined], respond_with: "events" } %>
-	<% end %>
+			<h3> Suggested events for you </h3>
+			<% @suggested_events.each do |event| %>
+				<%= render partial: "events/display_event", content_type: 'text/html', locals: { event: event, actions: [:attending,:maybe,:declined], respond_with: "events" } %>
+			<% end %>
+		</div>
+		<div class="span6" id="matches">
+			<% if @next_round_up_match %>
+				<h3> Your upcoming Round Up match </h3>
+				<%= render partial: "round_up_matches/display_round_up_match", content_type: 'text/html', locals: { match: @next_round_up_match, actions: [:attending,:declined], respond_with: "events" } %>	
+			<% end %>
+			<% if @todays_office_hours %>
+				<h3> Office hours today </h3>
+				<% @todays_office_hours.each do |toh| %>
+					<%= render partial: 'user_office_hours/display_office_hour', content_type: 'text/html', locals: { uoh: toh } %>
+				<% end %>
+			<% end %>
+		</div>
 
+	</div>
 
 <% end %>

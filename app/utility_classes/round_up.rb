@@ -81,7 +81,7 @@ class RoundUp # have one class query the database - have another class generate 
 	def select_best_matches #do this later
 		#pick which gm strategy produced the most matches
 
-		#@gm.commit_pairs #eventually uncomment
+		#commit_pairs @results[0].pairs #eventually uncomment
 	end
 
 	def get_user_availabilities
@@ -113,9 +113,9 @@ class RoundUp # have one class query the database - have another class generate 
 		end
 	end
 
-	def commit_pairs
-		@pairs.each do |pair|
-			rum = RoundUpMatch.create({date: pair.availability.date, expires: @today + 1.days, round_up_time_id: pair.availability.round_up_time.id}) #:date, :expires, :location, :round_up_time_id
+	def commit_pairs pairs
+		pairs.each do |pair|
+			rum = RoundUpMatch.create({date: pair.availability.date, expires: @today + 1.days, round_up_time_id: pair.availability.round_up_time.id, geo_id: pair.availability.office.id}) #:date, :expires, :location, :round_up_time_id
 			RoundUpMatchUser.create({user_id: pair.user1.id, round_up_match_id: rum.id}) #:open, :round_up_match_id, :rsvp, :user_id
 			RoundUpMatchUser.create({user_id: pair.user2.id, round_up_match_id: rum.id})
 		end
@@ -186,12 +186,12 @@ class QueryDatabase
 
 	def query_db today
 		# pull from the DB tables that may be used by multiple classes
+		MatchUser.set_declined_round_ups today
 		query_all_users
 		query_all_user_availabilities
 		query_all_round_up_times
 		query_all_offices
 		query_all_past_matches
-		MatchUser.set_declined_round_ups today
 	end
 
 	def query_all_users
@@ -262,10 +262,12 @@ class MatchUser
 
 	def matched?	
 		now = Time.now	
-		current_match = RoundUpMatchUser.find_by_sql("select * from round_up_users ruu
+		current_match = RoundUpMatchUser.find_by_sql("select * from round_up_match_users ruu
 			left join round_up_matches rum on ruu.round_up_match_id = rum.id 
-			where ruu.user_id = #{@id} and rum.date > #{@@past_limit} and ((rum.expires
-			< #{now} and ruu.rsvp != 'declined')or ruu.rsvp = 'atteding')")
+			where ruu.user_id = #{@id} and rum.date > #{@@past_limit.strftime} and ((rum.expires
+			< #{now.strftime('%D')} and ruu.rsvp != 'declined') or ruu.rsvp = 'attending')")
+		#must include date time, not just date in now query
+		!current_match.empty?
 		#current_match = RoundUpMatchUser.find_by_sql("select * from round_up_users ruu left join round_up_matches rum on ruu.round_up_match_id = rum.id where ruu.user_id = #{@id} and rum.date > #{@@past_limit} and (rum.expires < #{now} or ruu.rsvp = 'atteding')")
 	end
 
@@ -299,7 +301,7 @@ class MatchUser
 
 		#find users also assigned to that past match
 		@past_matches = all_past_matches.select { |pm|
-			(my_maches.include? pm.round_up_match_id and 
+			(my_matches.include? pm.round_up_match_id and 
 			pm.user_id != @db_user.id and 
 			pm.rsvp == 'attending')
 			}.

@@ -1,0 +1,26 @@
+  <% status_messages = get_status_messages %>    
+    <div class="row-fluid">
+      
+      <div class="span10">
+          <strong>Who </strong> <%=link_to @round_up_match_user.user.name, user_path(@round_up_match_user.id)%> (<%= @round_up_match_user.rsvp || 'yet to RSVP' %>) </br>
+          <strong>When </strong> <%=@next_round_up_match.date%> <strong> at </strong> <%= f_time @next_round_up_match.round_up_time.start_hour%> </br>
+          <strong>RSVP before</strong> <%=@next_round_up_match.expires%></br>
+          <strong>Office</strong> <%=@next_round_up_match.geo.name%></br>
+          <strong>Where</strong> <%=@next_round_up_match.location || 'Click below to set a specific location' %> </br>
+
+          <strong>Status </strong> <%= status_messages[@round_up_match_rsvp] || 'You have yet to RSVP' %></br>
+          <%= link_to 'RSVP, location, comments', edit_round_up_match_path(@next_round_up_match.id) %> </br>
+          <% unless @round_up_match_rsvp %>
+            buttons to RSVP
+          <% end %>
+      </div>
+<!--       <div class="span2">
+        <%# unless event.hosts_include? current_user %>
+          <%# actions.each do |action| %>
+            <%#= render partial: "events/rsvp", content_type: 'text/html', locals: { event: event, respond_with: respond_with, action: action } %>
+          <%# end %>
+        <%# end %>
+      </div> -->
+    </div>
+
+</br></br>

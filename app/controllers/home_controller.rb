@@ -10,7 +10,13 @@ class HomeController < ApplicationController
       else
         @user_events = current_user.find_attending_events
         @suggested_events = current_user.find_suggested_events
-        @new_rsvp = Rsvp.new
+        @new_rsvp = Rsvp.new #for events
+        @next_round_up_match = RoundUpMatch.get_next_match current_user.id 
+        if @next_round_up_match
+          @round_up_match_user = @next_round_up_match.get_other_user current_user.id
+          @round_up_match_rsvp = RoundUpMatchUser.where(round_up_match_id: @next_round_up_match.id)
+        end
+        @todays_office_hours = UserOfficeHour.where("day_of_week is ?", Date.today.strftime("%A"))
       end
 	else
 		redirect_to log_in_path#new_user_session_path

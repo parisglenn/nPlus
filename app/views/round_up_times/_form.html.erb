@@ -16,12 +16,12 @@
     <%= f.select :day, get_days_of_week %>
   </div>
   <div class="field">
-    <%= f.label :start_hour %><br />
-    <%= f.select :start_hour, options_for_select(generate_time_dropdown) %>
+    <%= f.label :start_hour%><br />
+    <%= f.time_select :start_hour, minute_step: 5, default: {:hour => '12', :minute => '30'}, ampm: true  %> 
   </div>
-  <div class="field">
+    <div class="field">
     <%= f.label :end_hour %><br />
-    <%= f.select :end_hour, options_for_select(generate_time_dropdown) %>
+    <%= f.time_select :end_hour, minute_step: 5, default: {:hour => '13', :minute => '30'}, ampm: true  %>
   </div>
   <div class="field">
     <%= f.label :deprecated %><br />

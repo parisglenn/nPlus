@@ -53,13 +53,16 @@ class UsersController < ApplicationController
   def create
     @office = Office.find(params[:user][:office])
     @team = Team.find(params[:user][:team])
+    num_users = User.count
     @user = User.new
 
     @user.assign_attributes(:full_name => params[:user][:full_name], 
                               :email => params[:user][:email],
                               :password => params[:user][:password],
                               :office => @office,
-                              :team => @team)
+                              :team => @team,
+                              admin: ((num_users==0) ? true : false)
+                              )
 
     respond_to do |format|
       if @user.save
