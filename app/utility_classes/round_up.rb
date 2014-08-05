@@ -260,15 +260,13 @@ class MatchUser
 		@declined_round_ups = @@all_declined_round_ups[@id] || []
 	end
 
-	def matched?	
-		now = Time.now	
-		current_match = RoundUpMatchUser.find_by_sql("select * from round_up_match_users ruu
-			left join round_up_matches rum on ruu.round_up_match_id = rum.id 
-			where ruu.user_id = #{@id} and rum.date > #{@@past_limit.strftime} and ((rum.expires
-			< #{now.strftime('%D')} and ruu.rsvp != 'declined') or ruu.rsvp = 'attending')")
-		#must include date time, not just date in now query
-		!current_match.empty?
-		#current_match = RoundUpMatchUser.find_by_sql("select * from round_up_users ruu left join round_up_matches rum on ruu.round_up_match_id = rum.id where ruu.user_id = #{@id} and rum.date > #{@@past_limit} and (rum.expires < #{now} or ruu.rsvp = 'atteding')")
+	def matched?
+		next_match = RoundUpMatch.get_next_match @id
+		if next_match.nil?
+			return false
+		else
+			return true
+		end	
 	end
 
 	def self.find id

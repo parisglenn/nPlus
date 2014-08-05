@@ -165,6 +165,7 @@ class EventsController < ApplicationController
       month = date_array[0]
       day   = date_array[1] 
       year  = date_array[2]
-      "#{year}-#{month}-#{day}"
+      #{}"#{year}-#{month}-#{day}"
+      Date.new(year.to_i, month.to_i, day.to_i)
     end
 end

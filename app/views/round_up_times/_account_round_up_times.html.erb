@@ -1,7 +1,8 @@
+<p> Listed below are several times during the week.  For each time you are available, please select an office where you would be interested in meeting up with a coworker of yours.  Cinder will try to match you with a coworker once a week so long as you have chosen an office from at least one of the times below. </p>
 <%= form_tag update_round_up_times_profiles_path, id: 'round_up_form', method: :put, remote: true do %> 
   <div class="field">
     <% @round_up_times.each do |rut| %>
-      <%= label_tag  "round_up_time-#{rut.id}", "#{rut.day} #{ft rut.start_hour.to_s}" %>
+      <%= label_tag  "round_up_time-#{rut.id}", "#{rut.day} #{f_time rut.start_hour}" %>
       <select id="<%='round_up_time-'+rut.id.to_s%>" name="round_up_times[<%=rut.id%>]">
         <% existing_geo_id = @existing_round_up_time_geo_hash[rut.id] %>
         <% (generate_geo_dropdown optional=true).each do |geo_name, geo_id| %>

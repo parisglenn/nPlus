@@ -37,7 +37,7 @@ NPlus::Application.routes.draw do
   get "my_interests" => "subscriptions#account_subscriptions", :as => "account_subscriptions"
   #match "/my_subscriptions", to: "subscriptions#account_subscriptions", via: get#, as: "account_subscriptions"
   #match '/users', to: 'profiles#index', via: 'get', as: 'users'
-
+  get "about" => "pages#about", :as => "about"
   devise_scope :user do 
     root to: 'static_pages#home'
     match '/sessions/user', to: 'devise/sessions#create', via: :post
