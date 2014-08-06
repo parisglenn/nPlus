@@ -262,7 +262,8 @@ class MatchUser
 
 	def matched?
 		next_match = RoundUpMatch.get_next_match @id
-		if next_match.nil?
+		match_this_week = RoundUpMatch.previous_match_this_week @id
+		if next_match.nil? and match_this_week.nil?
 			return false
 		else
 			return true

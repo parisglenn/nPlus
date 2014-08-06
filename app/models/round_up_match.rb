@@ -8,19 +8,35 @@ class RoundUpMatch < ActiveRecord::Base
   acts_as_commentable
 
   def self.get_next_match user_id
-  	all_matches = RoundUpMatchUser.get_user_matches user_id #where rsvp is not declined
+  	all_matches = RoundUpMatchUser.get_user_matches user_id #where my rsvp is not declined
   	match_ids = all_matches.map(&:round_up_match_id)
   	next_match = self.where(id: match_ids).where("date >= #{Date.today.strftime("%Y-%m-%d")}").
   	where("expires > ?", Time.now.strftime("%Y-%m-%d %H:%M:%S")).first
-  	match_users = next_match.get_users
-  	other_match_user = match_users.detect { |u| u.user.id != user_id }
-  	#other_match_user = RoundUpMatchUser.get_rsvp other_user_id, next_match.id
-  	#binding.pry
-  	if other_match_user and other_match_user.rsvp != 'declined'
-  		return next_match
-  	else 
+  	if next_match.nil?
   		return nil
-  	end
+  	else
+	  	other_match_user = next_match.get_other_user user_id
+	  	if other_match_user and other_match_user.rsvp != 'declined'
+	  		return next_match
+	  	else 
+	  		return nil
+	  	end
+	end
+  end
+
+  def self.previous_match_this_week user_id
+  	#if the match already happened, I don't care about when it expired, only about rsvps
+  	all_matches = RoundUpMatchUser.get_user_matches user_id #where my rsvp is not declined
+  	match_ids = all_matches.map(&:round_up_match_id)
+  	matches_this_week = self.where(id: match_ids).
+  	where("date >= #{(Date.today.wday).days.ago.strftime("%Y-%m-%d")}")
+  	matches_this_week.each do |match|
+  		other_match_user = match.get_other_user user_id
+	  	if other_match_user and other_match_user.rsvp != 'declined'
+	  		return match
+	  	end
+  	end	
+  	nil
   end
 
   def get_users

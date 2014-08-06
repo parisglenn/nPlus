@@ -1,3 +1,6 @@
+<div class="row-fluid">
+  <div class="span6">
+
 <p id="notice"><%= notice %></p>
 
 <p>
@@ -45,7 +48,11 @@
 <p>
   <b>Attendees:</br></b>
   <% @attending_users.each do |attendee| %>
-    <%= attendee.email %>
+    <div class="row-fluid">
+      <div class="span3">
+    <%= attendee.name %>
+      </div>
+      <div class="span3">
     <% if @host_ids.include? attendee.id %>
       (host)
     <% elsif @host_ids.include? current_user.id %>
@@ -55,7 +62,9 @@
         <input class="rsvp-button" name="commit" type="submit" value="Make a host">
       <% end %>
     <% end %> 
+  </div>
     </br>
+  </div>
   <% end %>
 </p>
 
@@ -65,8 +74,8 @@
 <% end %>
 <%= link_to 'Back', events_path %>
 
-<div class="row-fluid" id="event-comments">
-  <div class="span6">
+  </div>
+  <div class="span6" id="event-comments">
     <%= render partial: "shared/comments/comments" %>
   </div>
 </div>

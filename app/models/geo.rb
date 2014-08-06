@@ -16,6 +16,10 @@ class Geo < ActiveRecord::Base
 
 	end
 
+	def self.get_offices
+		self.where("parent_city is not null")
+	end
+
 end
 
 class GeoRelations

@@ -175,7 +175,7 @@ class ProfilesController < ApplicationController
       @user_geos = UserGeo.where user_id: current_user.id
       @existing_user_geo_ids = []
       @user_geos.each { |s| @existing_user_geo_ids << s.geo_id }
-      @geos = Geo.all
+      @offices = Geo.get_offices#.all
     end
 
     def get_user_office_hours
