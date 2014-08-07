@@ -62,9 +62,10 @@ class RoundUp # have one class query the database - have another class generate 
 		get_match_availabilities
 		@db.users.each do |u|
 			u.set_past_matches @db.past_matches
-			u.set_round_up_time_ids @db.round_up_times
+			u.set_round_up_time_ids @db.round_up_times #don't include any that have been declined this week
+			# extend round up user availabilities to include offices of parent cities that were selected
 		end	
-		get_user_availabilities
+		get_user_availabilities # add users with city preferences to child offices
 		remove_empty_match_availabilities
 		return true
 	end
@@ -85,6 +86,7 @@ class RoundUp # have one class query the database - have another class generate 
 	end
 
 	def get_user_availabilities
+		# add users with city preferences to child offices
 		@db.users.each do |u|
 			u.db_user.round_up_user_availabilities.each do |ruaa|
 				@match_availabilities.each do |ma|

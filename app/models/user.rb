@@ -48,8 +48,14 @@ class User < ActiveRecord::Base
   def find_suggested_events
     geo_tags = UserGeo.where(user_id: self.id)
     geo_tag_ids = geo_tags.map { |g| g.geo_id }
-    geos = Geo.where id: geo_tag_ids
-    geo_ids = geos.map { |g| g.id }
+    parent_geos = [] 
+    geo_tag_ids.each do |geo_id|
+      parent_geos.concat (Geo.get_parent_geos(geo_id))
+    end
+    parent_geo_ids = parent_geos.map(&:id)
+    all_geo_ids = parent_geo_ids.concat geo_tag_ids
+    # geos = Geo.where id: geo_tag_ids #all_geo_ids #remove this line
+    # geo_ids = geos.map { |g| g.id } #remove this line
     subscriptions = Subscription.where(user_id: self.id)
     interests = []
     subscriptions.each { |s| interests << s.interest_id }
@@ -59,7 +65,8 @@ class User < ActiveRecord::Base
     event_ids.uniq!
     rsvps = Rsvp.where(user_id: self.id).where(event_id: event_ids).where(status: ['attending','declined'])
     rsvps.each { |r| event_ids.delete r.event_id }
-    @suggested_events = Event.where(id: event_ids).where("event_date > ?", Time::now).where(geo_id: geo_ids)
+    #use all_geo_ids below, not geo_ids
+    @suggested_events = Event.where(id: event_ids).where("event_date > ?", Time::now).where(geo_id: all_geo_ids)
     @suggested_events.each do |event|
       event.status = :undecided
     end

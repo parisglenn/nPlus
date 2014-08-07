@@ -41,7 +41,7 @@
 
   <div class="field">
     <%= f.label :geo %><br />
-    <%= f.select :geo, options_for_select(generate_geo_dropdown, @event.geo_id) %>
+    <%= f.select :geo, options_for_select(generate_geo_dropdown, @event.geo_id), {}, class: 'chosen-select' %>
   </div>
   Event Type
   <% @event_types.each do |type| %>
