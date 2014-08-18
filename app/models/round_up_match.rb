@@ -8,6 +8,7 @@ class RoundUpMatch < ActiveRecord::Base
   acts_as_commentable
 
   def self.get_next_match user_id
+  	# this includes pending matches
   	all_matches = RoundUpMatchUser.get_user_matches user_id #where my rsvp is not declined
   	match_ids = all_matches.map(&:round_up_match_id)
   	next_match = self.where(id: match_ids).where("date >= #{Date.today.strftime("%Y-%m-%d")}").
@@ -26,6 +27,7 @@ class RoundUpMatch < ActiveRecord::Base
 
   def self.previous_match_this_week user_id
   	#if the match already happened, I don't care about when it expired, only about rsvps
+  	#pending matches are in the future - expired matches don't count as a match this week
   	all_matches = RoundUpMatchUser.get_user_matches user_id #where my rsvp is not declined
   	match_ids = all_matches.map(&:round_up_match_id)
   	matches_this_week = self.where(id: match_ids).

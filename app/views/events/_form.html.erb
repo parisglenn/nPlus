@@ -33,11 +33,15 @@
   </div>
   
 
-  <div class="field">
+  <div class="field"> 
     <%= f.label :event_date %><br />
     <%= f.text_field :event_date, {:'data-behaviour' => 'datepicker', :required => true} %>
   </div>
 
+  <div class="field">
+    <%= f.label :rsvp_limit %><br />
+    <%= f.text_field :rsvp_limit%>
+  </div>
 
   <div class="field">
     <%= f.label :geo %><br />

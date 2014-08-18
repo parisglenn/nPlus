@@ -53,7 +53,14 @@ class User < ActiveRecord::Base
       parent_geos.concat (Geo.get_parent_geos(geo_id))
     end
     parent_geo_ids = parent_geos.map(&:id)
-    all_geo_ids = parent_geo_ids.concat geo_tag_ids
+
+    child_geos = [] 
+    geo_tag_ids.each do |geo_id|
+      child_geos.concat (Geo.get_child_geos(geo_id))
+    end
+    child_geo_ids = child_geos.map(&:id)
+
+    all_geo_ids = geo_tag_ids.concat(parent_geo_ids).concat(child_geo_ids)
     # geos = Geo.where id: geo_tag_ids #all_geo_ids #remove this line
     # geo_ids = geos.map { |g| g.id } #remove this line
     subscriptions = Subscription.where(user_id: self.id)

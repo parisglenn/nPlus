@@ -11,8 +11,18 @@ class ApplicationController < ActionController::Base
 	  end
 	end
 
-  # private
-  # def current_user
-  #   @current_user ||= User.find(session[:user_id]) if session[:user_id]
-  # end
+  private
+
+    def format_date_save date
+      date_array = date.split("/")
+      month = date_array[0]
+      day   = date_array[1] 
+      year  = date_array[2]
+      Date.new(year.to_i, month.to_i, day.to_i)
+    end
+
+    def format_date_display
+      original_date = @event.event_date.dup
+      @event.event_date = "#{original_date.month}/#{original_date.day}/#{original_date.year}"
+    end
 end

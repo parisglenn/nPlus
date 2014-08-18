@@ -28,7 +28,7 @@
 
 <p>
   <b>Event date:</b>
-  <%= @event.event_date %>
+  <%= fd @event.event_date %>
 </p>
 
 <p>
@@ -44,6 +44,8 @@
   <% end %>
   <%= tags[0...-2] %>
 </p>
+
+<%= @event.rsvp_limit ? "This event is limited to #{@event.rsvp_limit} attendees" : "" %>
 
 <p>
   <b>Attendees:</br></b>

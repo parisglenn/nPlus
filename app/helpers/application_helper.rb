@@ -85,6 +85,10 @@ module ApplicationHelper
 		full_time.strftime("%I:%M %p")
 	end
 
+	def fd date
+		date.strftime("%m/%d/%Y")
+	end
+
 	#make a round_up_time into a string that is html form friendly
 	def concat_rut round_up_time
 		round_up_time.day+'-'+round_up_time.start_hour

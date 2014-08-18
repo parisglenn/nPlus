@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140803211659) do
+ActiveRecord::Schema.define(:version => 20140814184300) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(:version => 20140803211659) do
     t.text     "description"
     t.time     "starts_at"
     t.time     "ends_at"
+    t.integer  "rsvp_limit"
   end
 
   add_index "events", ["geo_id"], :name => "index_events_on_geo_id"

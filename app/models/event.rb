@@ -2,10 +2,12 @@ class Event < ActiveRecord::Base
   belongs_to :geo
   has_many :event_tags
   has_many :rsvps
-  attr_accessible :ends_at, :event_date, :location, :name, :starts_at, :geo, :description
+  attr_accessible :ends_at, :event_date, :location, :name, :starts_at, :geo, :description, :rsvp_limit
   accepts_nested_attributes_for :event_tags
 
   acts_as_commentable
+
+  validates :rsvp_limit, numericality: true
 
   def status=(status)
     @status = status
@@ -21,7 +23,7 @@ class Event < ActiveRecord::Base
   end
 
   def attending_users
-  	users = Rsvp.where(event_id: self.id).map { |r| r.user_id }
+  	users = Rsvp.where(event_id: self.id).where(status: 'attending').map { |r| r.user_id }
   	#I should be adding this to an event object that is not an active record object
   	User.where(id: users)
   end

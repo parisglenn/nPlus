@@ -4,14 +4,14 @@
       
       <div class="span10">
           <strong>Event </strong> <%=link_to event.name, event_path(event)%> </br>
-          <strong>Date </strong> <%=event.event_date%> <strong> Start Time </strong> <%=f_time event.starts_at%> <strong> End Time </strong> <%= f_time event.ends_at%> </br>
+          <strong>Date </strong> <%= fd event.event_date%> <strong> Start Time </strong> <%=f_time event.starts_at%> <strong> End Time </strong> <%= f_time event.ends_at%> </br>
           <strong>Location</strong> <%=event.location%> </br>
           <strong>Description </strong> <%=event.description%> </br>
           <strong>Type of Event </strong>  <% ets = "| "; event.event_tags.each { |et| ets += et.interest.name + " | "} %> <%= ets %> </br>
-          <strong>RSVP </strong> <%= status_messages[event.status] %>
+          <strong>RSVP </strong> <%= (event.rsvp_limit and event.rsvp_limit <= event.attending_users.count and event.status == :undecided) ? 'This event is at capacity' : status_messages[event.status] %>
       </div>
       <div class="span2">
-        <% unless event.hosts_include? current_user %>
+        <% unless event.hosts_include? current_user or (event.rsvp_limit and event.attending_users.count >= event.rsvp_limit ) %>
           <% actions.each do |action| %>
             <%= render partial: "events/rsvp", content_type: 'text/html', locals: { event: event, respond_with: respond_with, action: action } %>
           <% end %>

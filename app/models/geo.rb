@@ -41,6 +41,44 @@ class Geo < ActiveRecord::Base
   	Geo.find geo.send(('parent_'+geo_type).to_sym)
   end
 
+  def self.get_child_geos geo_id
+  	child_geos = []
+  	geo = Geo.find geo_id
+  	case geo.location_type
+  	when 'city'
+  		child_geos << get_child_geos_for('city', [geo])
+  	when 'region'
+  		child_geos << get_child_geos_for('region', [geo])
+  		child_geos << get_child_geos_for('city', child_geos[-1])
+  	when 'country'
+  		child_geos << get_child_geos_for('country', [geo])
+  		child_geos << get_child_geos_for('region', child_geos[-1])
+  		child_geos << get_child_geos_for('city', child_geos[-1])
+  	when 'global_zone'
+  		child_geos << get_child_geos_for('global_zone', [geo])
+  		child_geos << get_child_geos_for('country', child_geos[-1])
+  		child_geos << get_child_geos_for('region', child_geos[-1])
+  		child_geos << get_child_geos_for('city', child_geos[-1])
+  	end
+
+  	child_geos.flatten
+  end
+
+  def self.get_parent_geo_types
+  	{'city' => :parent_city, 'region' => :parent_region, 'country' => :parent_country,
+  		'global_zone' => :parent_zone}
+  end
+
+  def self.get_child_geos_for geo_type, geos
+  	children = []
+  	geos.each do |geo|
+		children << Geo.where((get_parent_geo_types[geo_type]) => geo.id)#.
+		#where(location_type: get_child_geo_types[geo_type])
+  	end
+  	children.flatten
+  end
+
+
 	def self.get_geo_hierarchy
 		geos=Geo.all
 		hierarchy = {}

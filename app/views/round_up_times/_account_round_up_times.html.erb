@@ -1,4 +1,4 @@
-<p> Listed below are several times during the week.  For each time you are available, please select an office where you would be interested in meeting up with a coworker of yours.  Cinder will try to match you with a coworker once a week so long as you have chosen an office from at least one of the times below. </p>
+<p> For each time of week below, please select the location where you will be available to meet a coworker. All fields are optional.  Cinder will try to match you with a coworker once a week so long as you have chosen an office from at least one of the times below. </p>
 <%= form_tag update_round_up_times_profiles_path, id: 'round_up_form', method: :put, remote: true do %> 
   <div class="field">
     <% @round_up_times.each do |rut| %>
