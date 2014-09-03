@@ -1,7 +1,18 @@
 class RoundUpTimesController < ApplicationController
   # GET /round_up_times
   # GET /round_up_times.json
-  before_filter :authorize_admin
+  before_filter :authorize_admin, except: [:users]
+
+  def users
+    @round_up_time = RoundUpTime.find(params[:id])
+    @geo_id_group = @round_up_time.round_up_user_availabilities.group_by(&:geo_id)
+    @geos = Geo.where id: @geo_id_group.keys
+    @geo_hash = {}
+    @geos.each { |g|
+      @geo_hash[g] = @geo_id_group[g.id]
+    }
+  end
+
   def index
     @round_up_times = RoundUpTime.all
 

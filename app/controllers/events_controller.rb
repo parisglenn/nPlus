@@ -10,6 +10,15 @@ class EventsController < ApplicationController
     end
   end
 
+  def past_events
+    @events = Event.where("event_date < ?",Date.today).where("event_date >= ?", 60.days.ago)
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @events }
+    end
+  end
+
   # GET /events/1
   # GET /events/1.json
   def show
@@ -21,6 +30,12 @@ class EventsController < ApplicationController
     @host_ids = hosts.map(&:user_id)
     @comments = @event.comment_threads.order('created_at desc')
     @new_comment = Comment.build_from(@event, current_user.id, "")
+    @actions = []
+    @new_rsvp = Rsvp.where(user_id: current_user.id, event_id: @event.id).first
+    @new_rsvp = Rsvp.new(user_id: current_user.id, event_id: @event.id) unless @new_rsvp 
+    @actions << :attending unless @new_rsvp.status == 'attending' or @event.hosts_include? current_user
+    @actions << :declined unless @new_rsvp.status == 'declined' or @event.hosts_include? current_user
+    @actions << :maybe unless @new_rsvp.status == 'maybe' or @event.hosts_include? current_user
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @event }

@@ -20,4 +20,17 @@ class RoundUpMatchUsersController < ApplicationController
       end
     end
   end
+
+  def rsvp
+    record = RoundUpRsvpCode.where(code: params[:code]).first
+    if record
+      match_user = RoundUpMatchUser.where(user_id: record.user_id, round_up_match_id: record.round_up_match_id).first
+      records = RoundUpRsvpCode.where(user_id: record.user_id, round_up_match_id: record.round_up_match_id)
+      match_user.rsvp = record.action
+      match_user.save
+    else
+      @message = "Round Up appointment could not be found or you have already RSVP'd to this Round Up match"
+    end
+  end
+  /round_up_match_user/rsvp/code 
 end

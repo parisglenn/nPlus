@@ -74,6 +74,9 @@ class User < ActiveRecord::Base
     rsvps.each { |r| event_ids.delete r.event_id }
     #use all_geo_ids below, not geo_ids
     @suggested_events = Event.where(id: event_ids).where("event_date > ?", Time::now).where(geo_id: all_geo_ids)
+    @suggested_events = @suggested_events.select { |se|
+      se.rsvp_limit.nil? || se.rsvp_limit < se.attending_users.count
+    }
     @suggested_events.each do |event|
       event.status = :undecided
     end

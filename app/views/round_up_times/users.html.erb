@@ -1,0 +1,10 @@
+<h3><%= "#{@round_up_time.day} #{f_time @round_up_time.start_hour}" %></h3> 
+<% @geo_hash.each do |geo, users| %>
+	<%=geo.name%>
+	<ul> <% users.each do |u| %>
+		<li> 
+			<%= u.user.name %>
+		</li>
+		<% end %>
+	</ul>
+<% end %>

@@ -7,7 +7,9 @@ NPlus::Application.routes.draw do
 
   resources :round_up_match_users, only: [:update]
 
+  match '/round_up_times/:id/users', to: 'round_up_times#users', via: :get, as: 'round_up_time_users'
   resources :round_up_times
+
 
   #get "my_round_up_times" => "round_up_times#account_round_up_times", :as => "account_round_up_times"
 
@@ -20,8 +22,13 @@ NPlus::Application.routes.draw do
   get "sign_up" => "users#new", :as => "sign_up" #/users/sign_up Devise::RegistrationsController#new
   get "log_out" => "sessions#destroy", :as => "log_out"
 
+  match '/events/past_events', to: 'events#past_events', via: :get, as: 'past_events'
   root :to => "home#index"
-  resources :events
+  resources :events #do
+  #   member do 
+  #     get 'past_events'
+  #   end
+  # end
 
   #devise_for :users
 

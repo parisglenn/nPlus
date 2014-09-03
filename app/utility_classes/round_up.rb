@@ -5,6 +5,7 @@ class RoundUp # have one class query the database - have another class generate 
 		# then user instances of another class to generate matches and I can see which is best
 	attr_accessor :db, :match_availabilities, :today, :results, :gm
 	def initialize
+		#reload all classes - roundUpUser, RoundUpMatch, etc.
 		@results = []
 		@match_availabilities = []
 		@today = Time.now
@@ -18,7 +19,6 @@ class RoundUp # have one class query the database - have another class generate 
 		end	
 		get_user_availabilities # add users with city preferences to child offices
 		remove_empty_match_availabilities
-		return true
 	end
 
 	def run
@@ -291,7 +291,6 @@ class MatchUser
 		my_matches = all_past_matches.select { |pm| 
 			pm.user_id == @db_user.id }.
 			map { |pm2| pm2.round_up_match_id } 
-
 		#find users also assigned to that past match
 		@past_matches = all_past_matches.select { |pm|
 			(my_matches.include? pm.round_up_match_id and 

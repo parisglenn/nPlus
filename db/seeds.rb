@@ -323,19 +323,44 @@
 =begin
 
 test plan
-	user1 - 1 total availabilities (monday)
-	user2 - 2 total availabilities (monday, thursday)
-	user3 - 3 total availabilities (monday, tuesday, wednesday)
+	user1 - 1 total availabilities (monday) 3 possible matches
+	user2 - 2 total availabilities (monday, thursday) 4 possible matches
+	user3 - 3 total availabilities (monday, tuesday, wednesday) 6 possible matches
 
-	user4 - 4 total availabilities (tuesday, wednesday, thursday, friday)
-	user5 - 1 total availability (wednesday)
-	user 6 - 1 availabiltity (monday - other office)
+	user4 - 4 total availabilities (tuesday, wednesday, thursday, friday) - friday should not show up 4 possible matches
+	user5 - 1 total availability (wednesday) 2 possible matches
+	user 6 - 1 availabiltity (monday - other office) 0 possible matches
 
 user1 should get matched wth user2 (but not three has lots of total availabilities)
 
 1 and 2 were matched - 4 and 5 were matched 
 6 can't match with anyone, so 3 was left out
-why was 5 matched with 4 and not 3?
+5 matched with 4 and not 3 because three has more matches in monday, etc
+
+5 should always match with 4 over 3, if possible
+######################   test past matches - working but i have no idea why it wasnt before
+give user 4 a past match with 5
+3 should then match with 5
+
+######################   test pending matches - works
+give user 4 a pending match with 6 (is pending)
+3 should then match with 5
+
+######################   test pending matches - works (currently 4-5 and 1-2 match)
+give user 4 a pending match with 6 (has declined)
+4 should then match with 5
+
+######################   test decline matches - works
+give user 4 a declined match with 6 (is pending)
+4 should then match with 5
+
+######################   test decline matches
+give user 4 a declined match with 6 (has declined)
+4 should then match with 5
+
+######################   test expired matches
+give user 4 an expired match (no rsvp) with 6 (no rsvp)
+4 should match with 5
 
 =end
 #test running the algo with existing and past matches existing as well

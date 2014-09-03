@@ -138,6 +138,8 @@ GEM
     multi_json (1.8.4)
     orm_adapter (0.5.0)
     polyglot (0.3.3)
+    pony (1.10)
+      mail (>= 2.0)
     pry (0.9.12.6)
       coderay (~> 1.0)
       method_source (~> 0.8)
@@ -253,6 +255,8 @@ DEPENDENCIES
   jquery-rails
   jquery-turbolinks (~> 2.0.1)
   less-rails
+  mail
+  pony (= 1.10)
   pry (~> 0.9.12.6)
   rails (= 3.2.12)
   rspec-rails (~> 2.14.0)

@@ -1,7 +1,7 @@
-<h3>All upcoming events</h3> <%= link_to 'Create new event', new_event_path %><span class='pull-right'><%= link_to 'View past events', past_events_path, class: 'pull-right' %></span>
+<h3>Events from past 60 days</h3> <%= link_to 'Create new event', new_event_path %><span class='pull-right'><%= link_to 'View upcoming events', events_path, class: 'pull-right' %></span>
 </br></br>
 
-<table class="data-table">
+<table>
   <tr>
     <th>Name</th>
     <th>Start time</th>
@@ -9,7 +9,6 @@
     <th>Location</th>
     <th>Event date</th>
     <th>Geo</th>
-    <th>Attendees</th>
     <% if current_user.admin? %>
       <th> Delete </th>
     <% end %>
@@ -23,7 +22,6 @@
     <td style="padding: 10px;"><%= event.location %></td>
     <td style="padding: 10px;"><%= event.event_date %></td>
     <td style="padding: 10px;"><%= event.geo.name %></td>
-    <td style="padding: 10px;"><%= event.attendees_info %></td>
     <!-- <td><%= link_to 'Show', event %></td>
     <td><%= link_to 'Edit', edit_event_path(event) %></td>
     <td>-->

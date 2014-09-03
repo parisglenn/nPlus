@@ -11,8 +11,11 @@ class RoundUpMatch < ActiveRecord::Base
   	# this includes pending matches
   	all_matches = RoundUpMatchUser.get_user_matches user_id #where my rsvp is not declined
   	match_ids = all_matches.map(&:round_up_match_id)
-  	next_match = self.where(id: match_ids).where("date >= #{Date.today.strftime("%Y-%m-%d")}").
-  	where("expires > ?", Time.now.strftime("%Y-%m-%d %H:%M:%S")).first
+  	next_match = self.where(id: match_ids).
+  	# where("date >= ?" ,Date.today.strftime("%Y-%m-%d")).
+  	# where("expires > ?", Time.now.strftime("%Y-%m-%d %H:%M:%S")).first
+  	where("date >= \'#{Date.today.strftime("%Y-%m-%d")}\'").
+  	where("expires > \'#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}\'").first
   	if next_match.nil?
   		return nil
   	else
@@ -25,16 +28,18 @@ class RoundUpMatch < ActiveRecord::Base
 	end
   end
 
-  def self.previous_match_this_week user_id
+  def self.previous_match_this_week user_id 
   	#if the match already happened, I don't care about when it expired, only about rsvps
   	#pending matches are in the future - expired matches don't count as a match this week
   	all_matches = RoundUpMatchUser.get_user_matches user_id #where my rsvp is not declined
-  	match_ids = all_matches.map(&:round_up_match_id)
+  	match_ids = all_matches.select{ |am| am.rsvp == 'attending'}.map(&:round_up_match_id)
   	matches_this_week = self.where(id: match_ids).
-  	where("date >= #{(Date.today.wday).days.ago.strftime("%Y-%m-%d")}")
+  	#where("date >= ?", (Date.today.wday).days.ago.strftime("%Y-%m-%d"))
+  	where("date >= \'#{(Date.today.wday).days.ago.strftime("%Y-%m-%d")}\'").
+  	where("date <= \'#{(7 - Date.today.wday).days.from_now.strftime("%Y-%m-%d")}\'")
   	matches_this_week.each do |match|
   		other_match_user = match.get_other_user user_id
-	  	if other_match_user and other_match_user.rsvp != 'declined'
+	  	if other_match_user and other_match_user.rsvp == 'attending'
 	  		return match
 	  	end
   	end	
@@ -45,7 +50,7 @@ class RoundUpMatch < ActiveRecord::Base
   	RoundUpMatchUser.where(round_up_match_id: self.id)
   end
 
-  def get_other_user user_id
+  def get_other_user user_id #this is assuming two users even though more can have it
   	self.get_users.detect { |u| u.user_id != user_id }
   end
 end
