@@ -11,7 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140814184300) do
+ActiveRecord::Schema.define(:version => 20140904125904) do
+
+  create_table "access_codes", :force => true do |t|
+    t.string   "code"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -138,6 +144,15 @@ ActiveRecord::Schema.define(:version => 20140814184300) do
     t.integer  "geo_id"
   end
 
+  create_table "round_up_rsvp_codes", :force => true do |t|
+    t.string   "code"
+    t.integer  "user_id"
+    t.integer  "round_up_match_id"
+    t.string   "action"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
   create_table "round_up_times", :force => true do |t|
     t.string   "day"
     t.time     "start_hour"
@@ -223,6 +238,7 @@ ActiveRecord::Schema.define(:version => 20140814184300) do
     t.integer  "office_id"
     t.integer  "team_id"
     t.text     "description"
+    t.string   "invite_code"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

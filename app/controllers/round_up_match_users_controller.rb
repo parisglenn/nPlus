@@ -25,9 +25,13 @@ class RoundUpMatchUsersController < ApplicationController
     record = RoundUpRsvpCode.where(code: params[:code]).first
     if record
       match_user = RoundUpMatchUser.where(user_id: record.user_id, round_up_match_id: record.round_up_match_id).first
-      records = RoundUpRsvpCode.where(user_id: record.user_id, round_up_match_id: record.round_up_match_id)
-      match_user.rsvp = record.action
-      match_user.save
+      if match_user.round_up_match.expires_at < Time.now
+        records = RoundUpRsvpCode.where(user_id: record.user_id, round_up_match_id: record.round_up_match_id)
+        match_user.rsvp = record.action
+        match_user.save
+      else
+        @message = "Your Round Up match has expired."
+      end
     else
       @message = "Round Up appointment could not be found or you have already RSVP'd to this Round Up match"
     end

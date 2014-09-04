@@ -7,13 +7,14 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, 
   :first_name, :last_name, :admin, :event_notification_frequency, :round_up_notification_frequency,
-  :team_id, :office_id, :description
+  :team_id, :office_id, :description, :invite_code
   #belongs_to :geo, foreign_key: :office_id
   belongs_to :office, class_name: 'Geo', foreign_key: :office_id, primary_key: :id
   belongs_to :team
   has_many :rsvps
   has_many :user_office_hours
   has_many :subscriptions
+  has_many :round_up_rsvp_codes
   has_many :user_geos
   has_many :round_up_matches, through: :round_up_match_users
   has_many :round_up_user_availabilities
@@ -28,6 +29,11 @@ class User < ActiveRecord::Base
   validates_presence_of :password, :on => :create
   validates_presence_of :email
   validates_uniqueness_of :email
+
+  validates_each :invite_code, :on => :create do |record, attr, value|
+    record.errors.add attr, "Please enter correct invite code" unless
+      value && value == AccessCodes.find(1).code
+  end
 
   #devise :ldap_authenticatable, :rememberable, :trackable
   #before_save :get_ldap_cn

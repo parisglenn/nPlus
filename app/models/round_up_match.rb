@@ -2,6 +2,7 @@ class RoundUpMatch < ActiveRecord::Base
   attr_accessible :date, :expires, :location, :round_up_time_id, :geo_id, :open
 
   has_many :users, through: :round_up_match_users
+  has_many :round_up_rsvp_codes
   belongs_to :round_up_time
   belongs_to :geo
 
