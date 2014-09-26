@@ -62,6 +62,7 @@ gem 'acts_as_commentable_with_threading'
 gem 'simple_form'
 gem "pony", "1.10"
 gem "mail"
+gem "icalendar"
 
 # To use ActiveModel has_secure_password
  ######Why is this not loading? did version of ruby change or something?

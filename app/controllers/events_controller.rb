@@ -174,4 +174,39 @@ class EventsController < ApplicationController
     end
   end
 
+  def email_event
+    @event = Event.find params[:event_id]
+    ical = Icalendar::Calendar.new
+    e = Icalendar::Event.new
+    e.dtstart = DateTime.new(year=@event.event_date.year, 
+      month=@event.event_date.month, day=@event.event_date.day,
+      hour=@event.starts_at.hour, minute=@event.starts_at.min)
+    e.dtend = DateTime.new(year=@event.event_date.year, 
+      month=@event.event_date.month, day=@event.event_date.day,
+      hour=@event.ends_at.hour, minute=@event.ends_at.min)
+    #e.end.icalendar_tzid="UTC"
+    e.organizer = 'event_machine@nplus.com'
+    e.created = DateTime.now
+    e.uid = "#{@event.id}_#{@current_user.id}"
+    e.summary = "Cinder event reminder"
+    e.description = <<-EOF
+    Event summary
+    Event: #{@event.name}
+    Location: #{@event.location}
+    Date: #{e.dtstart.strftime('%e %b %Y')}
+    Time: #{e.dtstart.strftime('%I:%M %p')}
+    EOF
+    ical.add_event(e)
+    #ical.custom_property({"METHOD" => "REQUEST"})
+
+    EventMailer.event_reminder(current_user, ical.to_ical).deliver
+    #email=mail(to: "erikosmond@gmail.com", subject: "Round Up Match",mime_version: "1.0",body:ical.to_ical,content_disposition: "attachment; filename='calendar.ics'",content_type:"text/calendar")#or content_type:"text/plain"
+    #email.header=email.header.to_s+'Content-Class:urn: content-classes:calendarmessage'
+    #email.deliver!
+
+    respond_to do |format|
+      format.html { redirect_to root_url, notice: "An email invite has been sent to you." }
+    end
+  end
+
 end

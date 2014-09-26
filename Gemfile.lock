@@ -110,6 +110,7 @@ GEM
     hike (1.2.3)
     hirb (0.7.2)
     i18n (0.6.9)
+    icalendar (2.1.1)
     journey (1.0.4)
     jquery-rails (3.0.4)
       railties (>= 3.0, < 5.0)
@@ -251,6 +252,7 @@ DEPENDENCIES
   flat-ui-rails (= 0.0.2)
   guard-rspec
   hirb (~> 0.7.1)
+  icalendar
   jquery-datatables-rails!
   jquery-rails
   jquery-turbolinks (~> 2.0.1)

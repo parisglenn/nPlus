@@ -5,6 +5,7 @@ class RoundUpMatchesController < ApplicationController
     @user1, @user2 = @round_up_match.get_users
     @comments = @round_up_match.comment_threads.order('created_at desc')
     @new_comment = Comment.build_from(@round_up_match, current_user.id, "")
+    @match_user = RoundUpMatchUser.where(user_id: current_user.id, round_up_match_id: @round_up_match.id).first
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @round_up_match }

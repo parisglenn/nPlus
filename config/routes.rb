@@ -6,6 +6,8 @@ NPlus::Application.routes.draw do
   resources :round_up_matches, only: [:edit, :update]
 
   match 'round_up_match_user/rsvp/:code', to: 'round_up_match_users#rsvp', via: :post, as: 'round_up_match_user_rsvp'
+  match 'round_up_match_user/email_match/:match_user_id', to: 'round_up_match_users#email_match', via: :get, as: 'email_match_appointment'
+  match 'round_up_match_user/email_match/:event_id', to: 'events#email_event', via: :get, as: 'email_event'
   resources :round_up_match_users, only: [:update]
 
   match '/round_up_times/:id/users', to: 'round_up_times#users', via: :get, as: 'round_up_time_users'

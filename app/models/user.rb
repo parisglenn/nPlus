@@ -20,11 +20,6 @@ class User < ActiveRecord::Base
   has_many :round_up_user_availabilities
   accepts_nested_attributes_for :team, :office#, :geo
   has_many :feedbacks
-  attr_accessible :email, :full_name, :password, :office, :team,
-                  :login, 
-                  :password, 
-                  :password_confirmation, 
-                  :remember_me
   validates_confirmation_of :password
   validates_presence_of :password, :on => :create
   validates_presence_of :email

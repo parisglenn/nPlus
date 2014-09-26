@@ -83,7 +83,14 @@
     <% end %>
   </div>
   <div class="span5" id="event-comments">
-    <%= render partial: "shared/comments/comments" %>
+    <div class="row-fluid">
+      <%= render partial: "shared/comments/comments" %>
+    </div>
+    <div class="row-fluid">
+      <%= link_to image_tag('OutlookIcon_48x48.gif'), email_event_path(event_id: @event.id) %>
+    </div>
   </div>
 </div>
+
+
 

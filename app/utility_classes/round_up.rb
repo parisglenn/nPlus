@@ -28,12 +28,35 @@ class RoundUp # have one class query the database - have another class generate 
 			@results << @gm
 			@gm.pair_users
 		end 
+		select_best_matches
 	end
 
 	def select_best_matches #do this later
 		#pick which gm strategy produced the most matches
 
 		#commit_pairs @results[0].pairs #eventually uncomment
+
+		notify_users @results[0].pairs #by sending them rsvp codes to their email
+	end
+
+	def notify_users pairs
+		pairs.each do |pair|
+			u1_attending_code = SecureRandom.hex(13)
+			u1_decline_code = SecureRandom.hex(13)
+			u2_attending_code = SecureRandom.hex(13)
+			u2_decline_code = SecureRandom.hex(13)
+			RoundUpRsvpCode.create!({user_id: pair.user1.id, action: 'attending', 
+				code: u1_attending_code, round_up_match_id: pair.availability.round_up_time.id})
+			RoundUpRsvpCode.create!({user_id: pair.user1.id, action: 'decline', 
+				code: u1_decline_code, round_up_match_id: pair.availability.round_up_time.id})
+			RoundUpRsvpCode.create!({user_id: pair.user2.id, action: 'attending', 
+				code: u2_attending_code, round_up_match_id: pair.availability.round_up_time.id})
+			RoundUpRsvpCode.create!({user_id: pair.user2.id, action: 'decline', 
+				code: u2_decline_code, round_up_match_id: pair.availability.round_up_time.id})
+			RoundUpMailer.round_up_match_rsvp(pair.user1, pair.user2, pair, u1_attending_code, u1_decline_code).deliver
+			RoundUpMailer.round_up_match_rsvp(pair.user2, pair.user1, pair, u2_attending_code, u2_decline_code).deliver
+
+		end
 	end
 
 	def get_user_availabilities
@@ -41,7 +64,6 @@ class RoundUp # have one class query the database - have another class generate 
 		@db.users.each do |u|
 			u.availabilities.each do |ruaa| 
 				@match_availabilities.each do |ma|
-					#binding.pry
 					if ruaa.round_up_time_id == ma.round_up_time.id and ruaa.geo_id == ma.office.id
 						ma.users << u.id
 						u.availability_ids << ma.id#.round_up_time.id.to_s + "---" + ma.office.id.to_s

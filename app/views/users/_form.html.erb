@@ -17,12 +17,26 @@
   </div>
   <div class="field">
     <%= f.label :email %><br />
-    <%= f.text_field :email %>
+    <%= f.email_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+  </div>
+  <div class="field">
+    <%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation %>
   </div>
   <div class="field">
     <%= f.label :admin %>
     <%= f.check_box :admin %>
+  </div>
   <div class="field">
+    <%= f.label :invite_code %>
+    <%= f.text_field :invite_code %>
+  </div >
+
+
     <%#= f.label :office %><br />
     <%#= f.select :office, options_for_select(generate_office_dropdown) %>
   </div>

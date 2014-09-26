@@ -56,7 +56,7 @@ class ProfilesController < ApplicationController
     if params[:geos].nil?
       @current_user_geos.each { |g| g.destroy }
     else  
-      @new_user_geos = params[:geos].keys
+      @new_user_geos = params[:geos].keys.select {|g| params[:geos][g].present? } 
       delete_tags = []
       current_tag_names = []
       @current_user_geos.each do |ug|

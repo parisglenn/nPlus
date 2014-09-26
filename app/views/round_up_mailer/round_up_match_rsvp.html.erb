@@ -1,0 +1,9 @@
+You have been matched with someone on Cinder.  Please click a link below or sign into your account to RSVP.  You have 24 hours to RSVP before the match expires.  You can message your match and set a location to meet <%= link_to 'here', edit_round_up_match_path(@match.id) %>
+<ul>
+<li>Match: <%= match_user.name %></li>
+<li>Date: <%= match.date  %></li>
+<li>Time: <%= f_time match.round_up_time.start_hour  %></li>
+</ul>
+<%= link_to 'Accept', round_up_match_user_rsvp_path(code: @accept_code) %>
+
+<%= link_to 'Decline', round_up_match_user_rsvp_path(code: @decline_code) %>
