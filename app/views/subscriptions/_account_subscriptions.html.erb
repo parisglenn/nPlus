@@ -27,6 +27,12 @@
 </div>
 <%= submit_tag "Update", class: 'actions btn btn-info' %>
 
+<% if @success_message %>
+  <a href="#account_round_up_times" onclick="changeTab('account_subscriptions_tab','account_round_up_times_tab')" data-toggle="tab" class="btn btn-info">
+    <span>Next: RoundUp Times</span>
+  </a>
+<% end %>
+
 <% end %>
 
 <script>

@@ -22,6 +22,12 @@
   </div>
   <%= @success_message %></br>
   <%= submit_tag "Update", class: 'btn btn-info' %>
+
+<% if @success_message %>
+  <a href="#user_office_hours" onclick="changeTab('account_round_up_times_tab','user_office_hours_tab')" data-toggle="tab" class="btn btn-info">
+    <span>Next: Office Hours</span>
+  </a>
+<% end %>
 <% end %>
 
 <script>

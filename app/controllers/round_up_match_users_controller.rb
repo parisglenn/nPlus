@@ -1,5 +1,3 @@
-require 'mail'
-
 class RoundUpMatchUsersController < ApplicationController
 
   def update
@@ -63,9 +61,7 @@ class RoundUpMatchUsersController < ApplicationController
     #ical.custom_property({"METHOD" => "REQUEST"})
 
     RoundUpMailer.round_up_match_appointment(@match_user.user, ical.to_ical).deliver
-    #email=mail(to: "erikosmond@gmail.com", subject: "Round Up Match",mime_version: "1.0",body:ical.to_ical,content_disposition: "attachment; filename='calendar.ics'",content_type:"text/calendar")#or content_type:"text/plain"
-    #email.header=email.header.to_s+'Content-Class:urn: content-classes:calendarmessage'
-    #email.deliver!
+
 
     respond_to do |format|
       format.html { redirect_to root_url, notice: "An email invite has been sent to you." }

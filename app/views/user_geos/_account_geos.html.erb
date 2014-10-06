@@ -28,6 +28,12 @@
 
 <%= submit_tag "Update", class: 'actions btn btn-info' %>
 
+<% if @success_message %>
+  <a href="#account_subscriptions" onclick="changeTab('account_geos_tab','account_subscriptions_tab')" data-toggle="tab" class="btn btn-info">
+    <span>Next: Interests</span>
+  </a>
+<% end %>
+
 <% end %>
 
 <script>

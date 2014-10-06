@@ -3,5 +3,4 @@
 <% else %>
 	You have successfully replied to your round up match. Click below to add an appointment in your Outlook calendar.  
 	<%= link_to image_tag('OutlookIcon_48x48.gif'), email_match_appointment_path(match_user_id: @match_user.id), {}, html: {title: "Add this appointment to your Outlook Calendar"} %>
-	<!-- give them a link to create a outlook appointment -->
 <% end %>
