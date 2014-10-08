@@ -49,6 +49,11 @@ group :assets do
   gem 'jquery-datatables-rails', git: 'git://github.com/rweng/jquery-datatables-rails.git'
 end
 
+group :production do
+  gem 'rails_12factor'
+end
+
+gem 'pg'
 gem 'jquery-rails'
 gem 'bootstrap-datepicker-rails'
 gem 'chosen-rails'
@@ -79,3 +84,4 @@ gem "icalendar"
 
 # To use debugger
 # gem 'debugger'
+ruby '2.0.0'
