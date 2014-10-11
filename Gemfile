@@ -41,7 +41,6 @@ end
 
 group :assets do
   gem 'uglifier', '>= 1.0.3'
-  gem 'bootstrap-sass', '~> 2.2.2.0'
   gem "flat-ui-rails", "0.0.2"
   gem 'turbolinks', '1.1.1'
   gem "jquery-turbolinks", "~> 2.0.1"
@@ -57,6 +56,7 @@ gem 'pg'
 gem 'jquery-rails'
 gem 'bootstrap-datepicker-rails'
 gem 'chosen-rails'
+gem 'bootstrap-sass', '~> 2.2.2.0'
 
 gem "therubyracer"
 gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
