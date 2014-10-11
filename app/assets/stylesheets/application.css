@@ -14,13 +14,13 @@
 
 
  */
-.rsvp-button = {
+.rsvp-button {
 	display: inline;
 }
 
 @import 'bootstrap';
 
-.dropdown-menu = {
+.dropdown-menu {
   z-index: 1000
   position: absolute
   padding: 5px
@@ -32,7 +32,6 @@
   +box-shadow(0 5px 10px rgba(0, 0, 0, 0.2))
 }
 
-input[type=checkbox]
-{
+input[type=checkbox] {
   -webkit-appearance:checkbox;
 }
