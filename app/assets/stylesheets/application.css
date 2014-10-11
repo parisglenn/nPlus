@@ -21,15 +21,15 @@
 @import 'bootstrap';
 
 .dropdown-menu {
-  z-index: 1000
-  position: absolute
-  padding: 5px
-  background: #fff
-  border: 1px solid rgba(0, 0, 0, 0.2)
-  list-style: none
+  z-index: 1000;
+  position: absolute;
+  padding: 5px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  list-style: none;
   min-width: 160px
   +background-clip(padding-box)
-  +box-shadow(0 5px 10px rgba(0, 0, 0, 0.2))
+  +box-shadow(0 5px 10px rgba(0, 0, 0, 0.2));
 }
 
 input[type=checkbox] {
