@@ -19,8 +19,6 @@
 	display: inline;
 }
 
-/*@import 'twitter/bootstrap';*/
-
 .dropdown-menu {
   z-index: 1000;
   position: absolute;
