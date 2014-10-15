@@ -23,8 +23,8 @@ test:
 
 production:
   adapter: postgresql
-  database: nplus_production#db/production.sqlite3
+  database: myapp_production#db/production.sqlite3
   encoding: unicode
-  username: nplus
+  username: myapp
   pool: 5
   timeout: 5000
