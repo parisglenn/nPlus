@@ -69,7 +69,7 @@ class UsersController < ApplicationController
         format.html { redirect_to root_path, notice: 'User was successfully created.' }
         format.json 
       else
-        format.html { render action: "new" }
+        format.html { redirect_to '/sessions/user', flash: 'Account creation unsuccessful.  Please check your invite code.' }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
