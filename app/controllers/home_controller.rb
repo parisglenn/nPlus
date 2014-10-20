@@ -16,7 +16,7 @@ class HomeController < ApplicationController
           @round_up_match_user = @next_round_up_match.get_other_user current_user.id
           @round_up_match_rsvp = RoundUpMatchUser.where(round_up_match_id: @next_round_up_match.id)
         end
-        @todays_office_hours = UserOfficeHour.where("day_of_week is ?", Date.today.strftime("%A"))
+        @todays_office_hours = UserOfficeHour.where("day_of_week = ?", Date.today.strftime("%A"))
       end
 	else
 		redirect_to log_in_path#new_user_session_path
