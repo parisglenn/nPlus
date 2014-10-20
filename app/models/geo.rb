@@ -8,7 +8,8 @@ class Geo < ActiveRecord::Base
 	has_many :round_up_matches
   attr_accessible :name, :location_type, :parent_zone, :parent_country, :parent_region, :parent_city
   default_scope order: 'geos.location_type DESC'
-  validates :name, uniqueness: true
+  validates_presence_of :name
+  validates_uniqueness_of :name, scope: :location_type
 
   #this is not the best implentation, just change it later
   #expecting full geo objects sent back, not ids
