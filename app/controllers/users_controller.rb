@@ -61,7 +61,7 @@ class UsersController < ApplicationController
                               :password => params[:user][:password],
                               :office => @office,
                               :team => @team,
-                              admin: ((num_users==0) ? true : false)
+                              admin: ((num_users==1) ? true : false)
                               )
 
     respond_to do |format|
