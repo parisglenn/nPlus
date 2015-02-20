@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   :first_name, :last_name, :admin, :event_notification_frequency, :round_up_notification_frequency,
   :team_id, :office_id, :description, :invite_code
   #belongs_to :geo, foreign_key: :office_id
-  belongs_to :office, class_name: 'Geo', foreign_key: :office_id, primary_key: :id
+  #belongs_to :office, class_name: 'Geo', foreign_key: :office_id, primary_key: :id
   #belongs_to :team
   has_many :rsvps
   has_many :user_office_hours
@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
   has_many :user_geos
   has_many :round_up_matches, through: :round_up_match_users
   has_many :round_up_user_availabilities
-  accepts_nested_attributes_for :team, :office#, :geo
+  #accepts_nested_attributes_for :office#, :team, :geo
   has_many :feedbacks
   validates_confirmation_of :password
   validates_presence_of :password, :on => :create
@@ -108,6 +108,14 @@ class User < ActiveRecord::Base
       Team.find team_id
     else
       Team.new
+    end
+  end
+
+  def office
+    if office_id.present?
+      Office.find office_id
+    else
+      Office.new
     end
   end
 

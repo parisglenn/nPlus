@@ -20,6 +20,7 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @users_office_hours = UserOfficeHour.where user_id: @user.id
+    @user_office_hour = UserOfficeHour.new if @users_office_hours.empty?
 
     respond_to do |format|
       format.html # show.html.erb
