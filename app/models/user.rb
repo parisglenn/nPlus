@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   :team_id, :office_id, :description, :invite_code
   #belongs_to :geo, foreign_key: :office_id
   belongs_to :office, class_name: 'Geo', foreign_key: :office_id, primary_key: :id
-  belongs_to :team
+  #belongs_to :team
   has_many :rsvps
   has_many :user_office_hours
   has_many :subscriptions
@@ -100,6 +100,14 @@ class User < ActiveRecord::Base
       first_name + " " + last_name 
     else
       email.split('@')[0]
+    end
+  end
+
+  def team
+    if team_id.present?
+      Team.find team_id
+    else
+      Team.new
     end
   end
 
